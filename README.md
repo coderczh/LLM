@@ -5,5 +5,5 @@ Vue3、Element-Plus、TypeScript、Vite、SCSS
 #### 后端
 Spring Boot3、Mybatis-Plus、Druid、MySQL
 #### 目录介绍
-frontend：前端工程
-backend：后端工程
+* frontend：前端工程
+* backend：后端工程
