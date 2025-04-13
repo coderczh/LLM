@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    druid:
+      max-open-prepared-statements: 20
+      aop-patterns: com.coderczh.backend.dao.*
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions:
+        - '*.js'
+        - '*.gif'
+        - '*.jpg'
+        - '*.png'
+        - '*.css'
+        - '*.ico'
+        - /druid/*
+        session-stat-enable: true
+        session-stat-max-count: 1000
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: false
+        login-username: root
+        login-password: 080923
+        allow: 127.0.0.1
+        deny:

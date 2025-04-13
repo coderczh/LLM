@@ -1,11 +1,5 @@
-$font-icon-color: #606266;
-
-// 定义多行截断混合宏
-@mixin multi-line-ellipsis($lines: 2) {
-  display: -webkit-box; // WebKit 弹性盒模型（必需）
-  -webkit-box-orient: vertical; // 垂直排列子元素（必需）
-  -webkit-line-clamp: $lines; // WebKit 前缀属性（兼容旧浏览器）
-  line-clamp: $lines; // 标准属性（未来兼容）
-  overflow: hidden; // 隐藏溢出内容
-  text-overflow: ellipsis; // 添加省略号
+div {
+  box-sizing: border-box;
 }
+
+$font-icon-color: #343434;

@@ -1,0 +1,23 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /llm
+
+spring:
+  profiles:
+    active: druid
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://43.137.8.130:3306/llm?characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 080923
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.coderczh.backend.entity
+  mapper-locations: classpath*:mapper/*Mapper.xml
+
+logging:
+  config: classpath:logback.xml
