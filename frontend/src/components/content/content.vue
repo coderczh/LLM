@@ -31,71 +31,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive } from 'vue'
 import { Upload, Promotion } from '@element-plus/icons-vue'
+import { reactive } from 'vue'
 
 const content = reactive<any>({
   question: '',
   deep: false,
 })
-
-/**
- * 获取页面高度
- */
-const pageHeight = computed(() => document.body.clientHeight)
 </script>
 
 <style lang="scss" scoped>
-// .content {
-//   display: flex;
-//   flex-direction: column;
-//   height: 100vh;
-//   // margin: 15px 15px;
-//   .top {
-//     background-color: aqua;
-//     flex: 1;
-//     overflow-y: auto;
-//     margin: 0 auto;
-//     width: 80%;
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: center;
-//     align-items: flex-start;
-//     .speak {
-//       color: black;
-//       font-size: 30px;
-//     }
-//     .template {
-//       color: $font-icon-color;
-//       margin-bottom: 15px;
-//       width: 200px;
-//       height: 30px;
-//       background-color: #f5f5f5;
-//       border-radius: 5px;
-//       display: flex;
-//       align-items: center;
-//       padding-left: 10px;
-//     }
-//   }
-//   .bottom {
-//     margin: 0 auto;
-//     height: 100px;
-//     width: 70%;
-//     border-radius: 10px;
-//     box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.3);
-//     .custom-borderless {
-//       height: 55px !important;
-//       font-size: 20px;
-//       color: $font-icon-color;
-//       :deep(.el-input__wrapper) {
-//         box-shadow: none !important;
-//         background: transparent;
-//         margin-bottom: none;
-//       }
-//     }
-//   }
-// }
-
 .content {
   padding: 20px;
   height: 100vh;

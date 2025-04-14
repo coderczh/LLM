@@ -62,17 +62,12 @@
       </template>
     </el-dialog>
   </div>
-  <el-button v-if="false">dada</el-button>
+  <el-button v-if="false" />
 </template>
 
 <script lang="ts" setup>
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { computed, reactive, ref } from 'vue'
-
-/**
- * 获取页面高度
- */
-const pageHeight = computed(() => document.body.clientHeight)
+import { reactive, ref } from 'vue'
 
 /**
  * 删除
@@ -142,7 +137,7 @@ const updateUserInfo = () => {
     margin-bottom: 20px;
     .record {
       padding: 0 5px;
-      width: 210px;
+      width: 260px;
       height: 45px;
       border-radius: 5px;
       transition: background-color 0.3s;
