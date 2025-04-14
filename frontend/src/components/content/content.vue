@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div class="top" :style="{ height: `${pageHeight}px` }">
+    <div class="top">
       <div class="speak">你可以这样说</div>
       <el-divider />
       <div class="template">今天合肥的天气如何</div>
@@ -42,17 +42,75 @@ const content = reactive<any>({
 /**
  * 获取页面高度
  */
-const pageHeight = computed(() => document.body.clientHeight - 140)
+const pageHeight = computed(() => document.body.clientHeight)
 </script>
 
 <style lang="scss" scoped>
+// .content {
+//   display: flex;
+//   flex-direction: column;
+//   height: 100vh;
+//   // margin: 15px 15px;
+//   .top {
+//     background-color: aqua;
+//     flex: 1;
+//     overflow-y: auto;
+//     margin: 0 auto;
+//     width: 80%;
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: flex-start;
+//     .speak {
+//       color: black;
+//       font-size: 30px;
+//     }
+//     .template {
+//       color: $font-icon-color;
+//       margin-bottom: 15px;
+//       width: 200px;
+//       height: 30px;
+//       background-color: #f5f5f5;
+//       border-radius: 5px;
+//       display: flex;
+//       align-items: center;
+//       padding-left: 10px;
+//     }
+//   }
+//   .bottom {
+//     margin: 0 auto;
+//     height: 100px;
+//     width: 70%;
+//     border-radius: 10px;
+//     box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.3);
+//     .custom-borderless {
+//       height: 55px !important;
+//       font-size: 20px;
+//       color: $font-icon-color;
+//       :deep(.el-input__wrapper) {
+//         box-shadow: none !important;
+//         background: transparent;
+//         margin-bottom: none;
+//       }
+//     }
+//   }
+// }
+
 .content {
+  padding: 20px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   .top {
-    margin: 0 400px 0 400px;
+    flex-grow: 1;
+    overflow-y: auto;
+    width: 80%;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: left;
+    align-items: flex-start;
+    padding-bottom: 15px;
     .speak {
       color: black;
       font-size: 30px;
@@ -70,8 +128,9 @@ const pageHeight = computed(() => document.body.clientHeight - 140)
     }
   }
   .bottom {
-    margin: 0 400px 0 400px;
     height: 100px;
+    width: 80%;
+    margin: 0 auto;
     border-radius: 10px;
     box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.3);
     .custom-borderless {

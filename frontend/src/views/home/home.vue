@@ -16,4 +16,8 @@ import leftAside from '@/components/left-aside/left-aside.vue'
 import content from '@/components/content/content.vue'
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.el-main) {
+  --el-main-padding: 0;
+}
+</style>

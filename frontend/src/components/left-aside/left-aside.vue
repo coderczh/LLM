@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="content">
-      <el-scrollbar :height="pageHeight">
+      <el-scrollbar>
         <div v-for="(button, index) in 50" :key="index" class="record">
           <div class="text">dddddddddddddddddddddddddddddddddd</div>
           <div class="icon" color="#343434" @click="deleteRecord">
@@ -72,7 +72,7 @@ import { computed, reactive, ref } from 'vue'
 /**
  * 获取页面高度
  */
-const pageHeight = computed(() => document.body.clientHeight - 130)
+const pageHeight = computed(() => document.body.clientHeight)
 
 /**
  * 删除
@@ -121,13 +121,14 @@ const updateUserInfo = () => {
 <style lang="scss" scoped>
 .left-aside {
   padding: 15px 15px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   .top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     .logo {
-      height: 30px;
-      width: 30px;
       .image {
         height: 25px;
         width: 30px;
@@ -135,6 +136,8 @@ const updateUserInfo = () => {
     }
   }
   .content {
+    flex-grow: 1;
+    overflow-y: auto;
     margin-top: 10px;
     margin-bottom: 20px;
     .record {
