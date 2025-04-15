@@ -8,6 +8,7 @@ const hyRequest = new HYRequest({
   interceptors: {
     requestInterceptor: (config) => {
       config.headers.setContentType('application/json')
+      config.headers.setAuthorization('Bearer sk-izxrtjnozdcvzttaqnrxdpphariewkiskaldqpitbcoafucr')
       return config
     },
     /*       requestInterceptorCatch: (err) => {

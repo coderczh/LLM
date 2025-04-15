@@ -1,18 +1,12 @@
+import type { DialogueInputDto } from '@/assets/common/common'
 import hyRequest from '..'
 
-interface DialogueInputDto {
-  question: string
-  model: number
+const getAnswer = (dialogueInputDto: DialogueInputDto) => {
+  return hyRequest.instance({
+    url: '/dialogue/answer',
+    method: 'POST',
+    data: dialogueInputDto,
+  })
 }
 
-export function registry(dialogueInputDto: DialogueInputDto) {
-  return hyRequest
-    .instance({
-      url: '/dialogue/answer',
-      method: 'POST',
-      data: dialogueInputDto,
-    })
-    .then((res) => {
-      console.log(res)
-    })
-}
+export { getAnswer }
