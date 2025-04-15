@@ -16,7 +16,7 @@ public class DialogueController {
     private DialogueService dialogueService;
 
 
-    @PostMapping("/")
+    @PostMapping("/answer")
     public ResultData<DialogueOutputDto> getAnswer(@RequestBody DialogueInputDto dialogueInputDto) {
         return dialogueService.getAnswer(dialogueInputDto);
     }

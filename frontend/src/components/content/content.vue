@@ -22,7 +22,7 @@
           </el-form-item>
           <el-form-item style="margin-right: 15px">
             <el-button :icon="Upload" circle />
-            <el-button :icon="Promotion" type="primary" circle />
+            <el-button :icon="Promotion" type="primary" circle @click="sendAnswer" />
           </el-form-item>
         </div>
       </el-form>
@@ -31,6 +31,7 @@
 </template>
 
 <script lang="ts" setup>
+import { registry } from '@/service/dialogue/dialogue'
 import { Upload, Promotion } from '@element-plus/icons-vue'
 import { reactive } from 'vue'
 
@@ -38,6 +39,14 @@ const content = reactive<any>({
   question: '',
   deep: false,
 })
+
+const sendAnswer = () => {
+  const dialogueInputDto: any = {
+    question: '明月几时有的下一句',
+    model: 0,
+  }
+  registry(dialogueInputDto)
+}
 </script>
 
 <style lang="scss" scoped>

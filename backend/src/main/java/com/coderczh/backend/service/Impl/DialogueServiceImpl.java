@@ -8,11 +8,14 @@ import com.coderczh.backend.dto.dialogue.DialogueOutputDto;
 import com.coderczh.backend.resp.ResultData;
 import com.coderczh.backend.service.DialogueService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class DialogueServiceImpl implements DialogueService {
     @Resource
@@ -22,12 +25,14 @@ public class DialogueServiceImpl implements DialogueService {
 
     @Override
     public ResultData<DialogueOutputDto> getAnswer(DialogueInputDto dialogueInputDto) {
+        log.info("+++++++++++++++++");
         JSONObject requestBody = getRequestBody(dialogueInputDto);
         @Cleanup Response response = send(requestBody);
         String answer = getAnswer(response);
         DialogueOutputDto dialogueOutputDto = new DialogueOutputDto()
                 .setAnswer(answer)
                 .setModel(dialogueInputDto.getModel());
+        log.info("===========");
         return ResultData.success(dialogueOutputDto);
     }
 

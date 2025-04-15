@@ -27,7 +27,7 @@ public enum ReturnCodeEnum {
     /**
      * 全局性错误
      */
-    PARAM_CHECK_ERROR("9000", "参数校验错误");
+    PARAM_CHECK_ERROR("9999", "参数校验错误");
 
     /**
      * 返回码
