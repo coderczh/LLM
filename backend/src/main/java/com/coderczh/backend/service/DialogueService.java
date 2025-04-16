@@ -1,12 +1,8 @@
 package com.coderczh.backend.service;
 
-import com.coderczh.backend.dto.dialogue.DialogueInputDto;
-import com.coderczh.backend.dto.dialogue.DialogueOutputDto;
-import com.coderczh.backend.resp.ResultData;
-import jakarta.validation.Valid;
-import org.springframework.validation.annotation.Validated;
+import io.github.pigmesh.ai.deepseek.core.chat.ChatCompletionResponse;
+import reactor.core.publisher.Flux;
 
-@Validated
 public interface DialogueService {
-    ResultData<DialogueOutputDto> getAnswer(@Valid DialogueInputDto dialogueInputDto);
+    Flux<ChatCompletionResponse> getAnswer(Integer model, String question);
 }

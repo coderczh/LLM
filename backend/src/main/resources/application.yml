@@ -2,6 +2,8 @@ server:
   port: 8888
   servlet:
     context-path: /llm
+  compression:
+    enabled: false
 
 spring:
   profiles:
@@ -21,3 +23,10 @@ mybatis-plus:
 
 logging:
   config: classpath:logback.xml
+
+
+deepseek:
+  # 硅基流动的url
+  base-url: https://api.siliconflow.cn/v1
+  # 秘钥(自己注册硅基的账号，并申请即可)
+  api-key: sk-izxrtjnozdcvzttaqnrxdpphariewkiskaldqpitbcoafucr

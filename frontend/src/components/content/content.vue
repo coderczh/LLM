@@ -40,6 +40,7 @@
 
 <script lang="ts" setup>
 import type { DialogueInputDto, Record } from '@/assets/common/common'
+import { BASE_URL } from '@/service/config'
 import { getAnswer } from '@/service/dialogue/dialogue'
 import { Upload, Promotion } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
@@ -52,50 +53,43 @@ const content = reactive<DialogueInputDto>({
 })
 
 const record = reactive<Record>({
-  question: '122222222222222221',
+  question: '11',
   answer: '',
 })
 
+let output = ''
 const send = async () => {
-  const dialogueInputDto: DialogueInputDto = {
-    question: content.question,
-    model: 0,
-  }
-  record.question = content.question
-  const answer = await getAnswer(dialogueInputDto)
-  let allAnswer: string
-  if (answer.data.code === '200') {
-    allAnswer = answer.data.data.answer
-  } else {
-    ElMessage.error(answer.data.message)
-  }
-  console.log(record.question)
-  console.log(record.answer)
-
-  let count = 0
-  const timer = setInterval(() => {
-    if (count < allAnswer.length) {
-      record.answer = record.answer += allAnswer.substring(count, (count += 30))
-    } else {
-      clearInterval(timer)
+  const eventSource = new EventSource(
+    `${BASE_URL}/dialogue/answer/${content.model}/${content.question}`,
+  )
+  eventSource.onmessage = (event) => {
+    const value = event.data
+    const data = JSON.parse(value)
+    console.log(output)
+    record.answer = output
+    if (data.choices[0].delta.reasoning_content === '') {
+      output += '开始思考：\n\t'
     }
-  }, 500)
+    if (data.choices[0].delta.content === '\n\n') {
+      record.answer += '思考结束！!\n\n\n\n'
+      output += '以下是正式回答：\n\n'
+    }
+    if (data.choices[0].finish_reason === 'stop' || data.choices[0].delta.content === '[DONE]') {
+      output += '\r\n\r\n回答结束！！'
+      eventSource.close()
+    }
+
+    // 拼接思考内容
+    if (data.choices[0].delta.reasoning_content) {
+      output += data.choices[0].delta.reasoning_content
+    }
+
+    // 拼接回答内容
+    if (data.choices[0].delta.content) {
+      output += data.choices[0].delta.content
+    }
+  }
 }
-
-// 动态拆分文本为行元素
-// const text = document.querySelector('.md-editor')?.textContent
-// console.log();
-
-// const lines = text.split('\n');  // 按换行符分割（或按容器宽度计算行数）
-// const container = document.querySelector('.dynamic-text');
-// container.innerHTML = lines.map(line =>
-//   `<div class="line">${line}</div>`
-// ).join('');
-
-// // 动态添加动画延迟
-// document.querySelectorAll('.line').forEach((line, index) => {
-//   line.style.animationDelay = `${index * 0.5}s`;
-// });
 </script>
 
 <style lang="scss" scoped>

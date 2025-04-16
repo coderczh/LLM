@@ -1,79 +1,50 @@
 package com.coderczh.backend.service.Impl;
 
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
+import cn.hutool.core.util.StrUtil;
 import com.coderczh.backend.common.Constant;
-import com.coderczh.backend.dto.dialogue.DialogueInputDto;
-import com.coderczh.backend.dto.dialogue.DialogueOutputDto;
-import com.coderczh.backend.resp.ResultData;
 import com.coderczh.backend.service.DialogueService;
+import io.github.pigmesh.ai.deepseek.core.DeepSeekClient;
+import io.github.pigmesh.ai.deepseek.core.chat.ChatCompletionRequest;
+import io.github.pigmesh.ai.deepseek.core.chat.ChatCompletionResponse;
+import io.github.pigmesh.ai.deepseek.core.chat.ResponseFormatType;
 import jakarta.annotation.Resource;
-import jakarta.validation.Valid;
-import lombok.Cleanup;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 @Slf4j
 @Service
 public class DialogueServiceImpl implements DialogueService {
-    @Resource
-    private OkHttpClient httpClient;
 
-    private static final MediaType CONTENT_TYPE = MediaType.parse(Constant.CONTENT_TYPE);
+    @Resource
+    private DeepSeekClient deepSeekClient;
 
     @Override
-    public ResultData<DialogueOutputDto> getAnswer(DialogueInputDto dialogueInputDto) {
-        log.info("+++++++++++++++++");
-        JSONObject requestBody = getRequestBody(dialogueInputDto);
-        @Cleanup Response response = send(requestBody);
-        String answer = getAnswer(response);
-        DialogueOutputDto dialogueOutputDto = new DialogueOutputDto()
-                .setAnswer(answer)
-                .setModel(dialogueInputDto.getModel());
-        log.info("===========");
-        return ResultData.success(dialogueOutputDto);
-    }
-
-    private JSONObject getRequestBody(DialogueInputDto dialogueInputDto) {
-        JSONObject requestBody = new JSONObject();
-        requestBody.put("model", dialogueInputDto.getModel() == 0 ? Constant.MODEL_V3 : Constant.MODEL_R1);
-        requestBody.put("stream", false);
-        requestBody.put("max_tokens", 512);
-        requestBody.put("temperature", 0.7);
-        requestBody.put("top_p", 0.7);
-        requestBody.put("top_k", 50);
-        requestBody.put("frequency_penalty", 0.5);
-        requestBody.put("n", 1);
-        requestBody.put("stop", new JSONArray());
-        JSONArray messages = new JSONArray();
-        JSONObject message = new JSONObject();
-        message.put("role", "user");
-        message.put("content", dialogueInputDto.getQuestion());
-        messages.add(message);
-        requestBody.put("messages", messages);
-        return requestBody;
-    }
-
-    @SneakyThrows
-    private Response send(JSONObject requestBody) {
-        RequestBody body = RequestBody.create(requestBody.toJSONString(), CONTENT_TYPE);
-        Request request = new Request.Builder()
-                .url(Constant.URL)
-                .header("Content-Type", "application/json")
-                .header("Authorization", Constant.API_KEY)
-                .post(body)
-                .build();
-        return httpClient.newCall(request).execute();
-    }
-
-    @SneakyThrows
-    private String getAnswer(Response response) {
-        JSONObject responseBody = JSONObject.parse(response.body().string());
-        JSONArray choices = JSONArray.from(responseBody.get("choices"));
-        JSONObject choice = JSONObject.from(choices.get(0));
-        JSONObject message = JSONObject.from(choice.get("message"));
-        return (String) message.get("content");
+    public Flux<ChatCompletionResponse> getAnswer(Integer model, String question) {
+        if ((model != 0 && model != 1) || StrUtil.isBlank(question)) {
+            return Flux.empty();
+        } else {
+            ChatCompletionRequest request = ChatCompletionRequest.builder()
+                    // 添加用户输入的提示词（prompt），即模型生成文本的起点。告诉模型基于什么内容生成文本。
+                    .addUserMessage(question)
+                    // 指定使用的模型名称。不同模型可能有不同的能力和训练数据，选择合适的模型会影响生成结果。
+                    .model(model == 0 ? Constant.MODEL_V3 : Constant.MODEL_R1)
+                    // 是否以流式（streaming）方式返回结果。
+                    .stream(true)
+                    // 控制生成文本的随机性。0.0：生成结果非常确定，倾向于选择概率最高的词。1.0：生成结果更具随机性和创造性。
+                    .temperature(0.7)
+                    // 控制生成文本中重复内容的惩罚程度。0.0：不惩罚重复内容。1.0 或更高：减少重复内容，增加多样性。
+                    .frequencyPenalty(0.5)
+                    // 标识请求的用户。用于跟踪和日志记录，通常用于区分不同用户的请求。
+                    .user("user")
+                    // 控制生成文本时选择词的范围。0.7：从概率最高的 70% 的词中选择。1.0：不限制选择范围。
+                    .topP(0.7)
+                    // 控制模型生成的文本的最大长度。这对于防止生成过长的文本或确保响应在预期的范围内非常有用。
+                    .maxCompletionTokens(2000)
+                    // 响应结果的格式。
+                    .responseFormat(ResponseFormatType.TEXT)
+                    .build();
+            return deepSeekClient.chatFluxCompletion(request);
+        }
     }
 }
