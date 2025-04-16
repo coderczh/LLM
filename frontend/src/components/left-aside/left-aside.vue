@@ -66,8 +66,9 @@
 </template>
 
 <script lang="ts" setup>
+import type { UserInfo } from '@/assets/common/common'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 
 /**
  * 删除
@@ -98,10 +99,10 @@ const logout = () => {
  * 编辑用户信息
  */
 const showUserInfo = ref(false)
-const userInfo = reactive({
+const userInfo = reactive<UserInfo>({
   avatar: 'https://llm-1258823864.cos.ap-shanghai.myqcloud.com/boy.png',
   nickName: '天天向上',
-  gender: '男',
+  gender: '1',
 })
 const updateUserInfo = () => {
   showUserInfo.value = false
@@ -111,6 +112,18 @@ const updateUserInfo = () => {
     plain: true,
   })
 }
+
+/**
+ * 如果性别发生变动，头像也会变动
+ */
+watch(
+  userInfo,
+  (newVal) =>
+    (userInfo.avatar =
+      newVal.gender === '0'
+        ? 'https://llm-1258823864.cos.ap-shanghai.myqcloud.com/girl.png'
+        : 'https://llm-1258823864.cos.ap-shanghai.myqcloud.com/boy.png'),
+)
 </script>
 
 <style lang="scss" scoped>

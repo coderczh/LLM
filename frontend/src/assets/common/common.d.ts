@@ -8,4 +8,10 @@ interface Record {
   answer: string
 }
 
-export { DialogueInputDto, Record }
+interface UserInfo {
+  avatar: string
+  nickName: string
+  gender: string
+}
+
+export { DialogueInputDto, Record, UserInfo }

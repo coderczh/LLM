@@ -27,7 +27,12 @@ public enum ReturnCodeEnum {
     /**
      * 全局性错误
      */
-    PARAM_CHECK_ERROR("9999", "参数校验错误");
+    PARAM_CHECK_ERROR("9999", "参数校验错误"),
+
+    /**
+     * 业务级返回码
+     */
+    USER_INFO_ERROR("1000", "用户名或密码错误");
 
     /**
      * 返回码
