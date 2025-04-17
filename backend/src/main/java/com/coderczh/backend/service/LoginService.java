@@ -5,5 +5,7 @@ import com.coderczh.backend.resp.ResultData;
 
 public interface LoginService {
 
-    ResultData<UserInfo> getUserInfo(UserInfo userInfo);
+    ResultData<UserInfo> selectUserInfo(UserInfo userInfo);
+
+    ResultData<Integer> updateUserInfo(UserInfo userInfo);
 }

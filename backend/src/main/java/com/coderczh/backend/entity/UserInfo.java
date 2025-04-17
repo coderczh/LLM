@@ -27,6 +27,12 @@ public class UserInfo implements Serializable {
     private Integer id;
 
     /**
+     * 工号
+     */
+    @TableField("job_no")
+    private String jobNo;
+
+    /**
      * 头像
      */
     @TableField("avatar")

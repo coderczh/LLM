@@ -14,4 +14,12 @@ interface UserInfo {
   gender: string
 }
 
+interface UserInfo {
+  jobNo: string
+  avatar: string
+  nickName: string
+  gender: string
+  password: string
+}
+
 export { DialogueInputDto, Record, UserInfo }

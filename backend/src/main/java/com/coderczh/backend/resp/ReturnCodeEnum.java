@@ -32,7 +32,8 @@ public enum ReturnCodeEnum {
     /**
      * 业务级返回码
      */
-    USER_INFO_ERROR("1000", "用户名或密码错误");
+    USER_INFO_ERROR("1000", "用户名或密码错误"),
+    UPDATE_USER_INFO_FAIL("1001", "用户信息更新失败"),;
 
     /**
      * 返回码
