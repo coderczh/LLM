@@ -41,9 +41,7 @@
 <script lang="ts" setup>
 import type { DialogueInputDto, Record } from '@/assets/common/common'
 import { BASE_URL } from '@/service/config'
-import { getAnswer } from '@/service/dialogue/dialogue'
 import { Upload, Promotion } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
 import { MdPreview } from 'md-editor-v3'
 import { reactive } from 'vue'
 

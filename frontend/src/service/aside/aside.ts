@@ -1,12 +1,12 @@
 import type { UserInfo } from '@/assets/common/common'
 import hyRequest from '..'
 
-const getUserInfo = (userInfo: UserInfo) => {
+const getUserInfoReq = (userInfo: UserInfo) => {
   return hyRequest.instance({
     url: '/login/user-info',
-    method: 'PUT',
+    method: 'POST',
     data: userInfo,
   })
 }
 
-export { getUserInfo }
+export { getUserInfoReq }

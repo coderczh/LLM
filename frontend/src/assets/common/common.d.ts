@@ -9,16 +9,10 @@ interface Record {
 }
 
 interface UserInfo {
-  avatar: string
-  nickName: string
-  gender: string
-}
-
-interface UserInfo {
   jobNo: string
-  avatar: string
-  nickName: string
-  gender: string
+  avatar?: string
+  nickName?: string
+  gender?: string
   password: string
 }
 

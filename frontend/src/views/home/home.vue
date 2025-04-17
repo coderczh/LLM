@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import leftAside from '@/components/left-aside/left-aside.vue'
+import leftAside from '@/components/aside/aside.vue'
 import content from '@/components/content/content.vue'
 </script>
 

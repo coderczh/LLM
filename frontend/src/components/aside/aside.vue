@@ -66,9 +66,28 @@
 </template>
 
 <script lang="ts" setup>
+import { localCache } from '@/assets/common/cache'
 import type { UserInfo } from '@/assets/common/common'
+import { USER_INFO } from '@/assets/common/constant'
+import { useLoginStore } from '@/stores/aside/aside'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { reactive, ref, watch } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
+
+const userInfo = reactive<UserInfo>({
+  jobNo: '',
+  avatar: '',
+  nickName: '',
+  gender: '',
+  password: '',
+})
+const loginStore = useLoginStore()
+onMounted(() => {
+  const cacheInfo = localCache.getCache(USER_INFO)
+  if (cacheInfo !== null) {
+    Object.assign(userInfo, cacheInfo)
+  } else {
+  }
+})
 
 /**
  * 删除
@@ -99,11 +118,6 @@ const logout = () => {
  * 编辑用户信息
  */
 const showUserInfo = ref(false)
-const userInfo = reactive<UserInfo>({
-  avatar: 'https://llm-1258823864.cos.ap-shanghai.myqcloud.com/boy.png',
-  nickName: '天天向上',
-  gender: '1',
-})
 const updateUserInfo = () => {
   showUserInfo.value = false
   ElMessage({
