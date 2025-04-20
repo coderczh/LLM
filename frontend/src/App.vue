@@ -4,9 +4,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import 'md-editor-v3/lib/preview.css'
-</script>
+<script lang="ts" setup></script>
 
 <style lang="scss">
 html,
@@ -18,9 +16,5 @@ body {
 
 * {
   box-sizing: border-box;
-}
-
-:root {
-  --el-main-padding: 0px;
 }
 </style>

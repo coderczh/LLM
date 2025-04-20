@@ -8,7 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Aside: typeof import('./src/components/aside/aside.vue')['default']
+    Aside: typeof import('./src/components/tab/aside.vue')['default']
     Content: typeof import('./src/components/content/content.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
@@ -31,5 +31,6 @@ declare module 'vue' {
     LeftAside: typeof import('./src/components/left-aside/left-aside.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Tab: typeof import('./src/components/tab/tab.vue')['default']
   }
 }
