@@ -53,7 +53,7 @@
               </div>
             </div>
           </div>
-          <div class="office" style="margin-left: 15px">
+          <div class="office" style="margin-left: 20px">
             <div class="office-name">编码助手</div>
             <div class="office-type">
               <div class="office-type-item">
@@ -103,6 +103,20 @@
             >
           </div>
         </div>
+        <div class="input">
+          <el-input
+            style="width: 85%; height: 50px; font-size: 15px"
+            placeholder="有问题，问百全"
+            v-model="inputVal"
+          >
+            <template #prefix
+              ><el-icon color="#343434" size="20" style="margin-right: 15px"><Upload /></el-icon>
+            </template>
+            <template #suffix>
+              <el-button :icon="Promotion" circle color="#3a59d1" />
+            </template>
+          </el-input>
+        </div>
       </div>
     </div>
   </div>
@@ -110,18 +124,17 @@
 
 <script lang="ts" setup>
 import type { StyleChange } from '@/assets/common/common'
-import { Search } from '@element-plus/icons-vue'
-import { reactive } from 'vue'
+import { Search, Promotion } from '@element-plus/icons-vue'
+import { reactive, ref } from 'vue'
 
 const deepOperation = reactive<StyleChange>({
   'background-color': '',
   'border-color': '',
-  color: '',
+  color: '#777',
   outline: '',
 })
-
 const deep = () => {
-  if (deepOperation.color === '') {
+  if (deepOperation.color === '#777') {
     Object.assign(deepOperation, {
       'background-color': 'var(--el-button-hover-bg-color)',
       'border-color': 'var(--el-button-hover-border-color)',
@@ -141,11 +154,11 @@ const deep = () => {
 const onlineOperation = reactive<StyleChange>({
   'background-color': '',
   'border-color': '',
-  color: '',
+  color: '#777',
   outline: '',
 })
 const online = () => {
-  if (onlineOperation.color === '') {
+  if (onlineOperation.color === '#777') {
     Object.assign(onlineOperation, {
       'background-color': 'var(--el-button-hover-bg-color)',
       'border-color': 'var(--el-button-hover-border-color)',
@@ -156,11 +169,13 @@ const online = () => {
     Object.assign(onlineOperation, {
       'background-color': '',
       'border-color': '',
-      color: '',
+      color: '#777',
       outline: '',
     })
   }
 }
+
+const inputVal = ref<string>('')
 </script>
 
 <style lang="scss" scoped>
@@ -226,7 +241,7 @@ const online = () => {
         height: 180px;
         display: flex;
         .office {
-          width: 30%;
+          width: 40%;
           height: 100%;
           border-radius: 10px;
           background: $theme-color-to-right;
@@ -242,8 +257,8 @@ const online = () => {
             justify-content: center;
             align-items: center;
             .office-type-item {
-              width: 70px;
-              height: 90px;
+              width: 85px;
+              height: 100px;
               background-color: #fff;
               margin: 10px 5px;
               border-radius: 10px;
@@ -274,13 +289,35 @@ const online = () => {
       border-radius: 0 0 10px 0;
       .operation {
         display: flex;
-        color: $font-icon-color;
         line-height: 1.2em;
+        padding-bottom: 12px;
+        width: 60%;
+        padding-top: 70px;
+        padding-left: 10px;
+        margin: 0 auto;
         .deep {
           padding-right: 10px;
         }
       }
+      .input {
+        width: 60%;
+        margin: 0 auto;
+      }
     }
   }
+}
+
+:deep(.el-input__wrapper) {
+  border-radius: 15px;
+  border: 1px solid #3a59d1;
+  box-shadow: none;
+}
+
+:deep(.el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 0.5px #3a59d1;
+}
+
+:deep(.el-input__inner) {
+  color: #343434;
 }
 </style>
