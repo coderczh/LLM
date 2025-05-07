@@ -53,6 +53,35 @@
               </div>
             </div>
           </div>
+          <div class="office" style="margin-left: 15px">
+            <div class="office-name">编码助手</div>
+            <div class="office-type">
+              <div class="office-type-item">
+                <div class="office-type-item-img">
+                  <img src="@/assets/img/bug.png" style="width: 30px; height: 30px" />
+                </div>
+                <div class="office-type-item-text">bug修复</div>
+              </div>
+              <div class="office-type-item">
+                <div class="office-type-item-img">
+                  <img src="@/assets/img/flaw.png" style="width: 30px; height: 30px" />
+                </div>
+                <div class="office-type-item-text">漏洞分析</div>
+              </div>
+              <div class="office-type-item">
+                <div class="office-type-item-img">
+                  <img src="@/assets/img/code.png" style="width: 30px; height: 30px" />
+                </div>
+                <div class="office-type-item-text">代码续写</div>
+              </div>
+              <div class="office-type-item">
+                <div class="office-type-item-img">
+                  <img src="@/assets/img/explain.png" style="width: 30px; height: 30px" />
+                </div>
+                <div class="office-type-item-text">代码解释</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="answer">11</div>
@@ -85,7 +114,7 @@ import { Search } from '@element-plus/icons-vue'
     border-radius: 0 10px 10px 0;
     position: relative;
     .tip {
-      width: 70%;
+      width: 60%;
       margin: 0 auto;
       height: calc(100% - 210px);
       border-radius: 0 10px 0 0;
@@ -125,6 +154,7 @@ import { Search } from '@element-plus/icons-vue'
         padding-top: 10px;
         width: 100%;
         height: 180px;
+        display: flex;
         .office {
           width: 30%;
           height: 100%;

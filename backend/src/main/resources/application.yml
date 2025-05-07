@@ -6,6 +6,10 @@ server:
     enabled: false
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB     # 文件大小限制（参考网页1[1](@ref)）
+      max-request-size: 200MB
   profiles:
     active: druid
   datasource:
