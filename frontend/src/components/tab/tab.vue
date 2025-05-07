@@ -17,7 +17,7 @@
       <div class="text">收藏</div>
     </div>
     <div class="bottom">
-      <el-button color="rgba(0, 0, 0, 0.1)" size="large" circle>登录</el-button>
+      <el-button color="rgba(0, 0, 0, 0.05)" size="large" circle>登录</el-button>
     </div>
   </div>
 </template>
