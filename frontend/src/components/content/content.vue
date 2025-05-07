@@ -55,13 +55,83 @@
           </div>
         </div>
       </div>
-      <div class="answer">11</div>
+      <div class="answer">
+        <div class="operation">
+          <div class="deep" @click="deep">
+            <el-button round :style="deepOperation">
+              <template #icon>
+                <img src="@/assets/img/deep.png" style="width: 16px; height: 16px" />
+              </template>
+              深度思考
+            </el-button>
+          </div>
+          <div class="online" @click="online">
+            <el-button round :style="onlineOperation">
+              <template #icon>
+                <img src="@/assets/img/online.png" style="width: 18px; height: 18px" />
+              </template>
+              联网搜索</el-button
+            >
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import type { StyleChange } from '@/assets/common/common'
 import { Search } from '@element-plus/icons-vue'
+import { reactive } from 'vue'
+
+const deepOperation = reactive<StyleChange>({
+  'background-color': '',
+  'border-color': '',
+  color: '',
+  outline: '',
+})
+
+const deep = () => {
+  if (deepOperation.color === '') {
+    Object.assign(deepOperation, {
+      'background-color': 'var(--el-button-hover-bg-color)',
+      'border-color': 'var(--el-button-hover-border-color)',
+      color: 'var(--el-button-hover-text-color)',
+      outline: 'none',
+    })
+  } else {
+    Object.assign(deepOperation, {
+      'background-color': '',
+      'border-color': '',
+      color: '',
+      outline: '',
+    })
+  }
+}
+
+const onlineOperation = reactive<StyleChange>({
+  'background-color': '',
+  'border-color': '',
+  color: '',
+  outline: '',
+})
+const online = () => {
+  if (onlineOperation.color === '') {
+    Object.assign(onlineOperation, {
+      'background-color': 'var(--el-button-hover-bg-color)',
+      'border-color': 'var(--el-button-hover-border-color)',
+      color: 'var(--el-button-hover-text-color)',
+      outline: 'none',
+    })
+  } else {
+    Object.assign(onlineOperation, {
+      'background-color': '',
+      'border-color': '',
+      color: '',
+      outline: '',
+    })
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -172,6 +242,14 @@ import { Search } from '@element-plus/icons-vue'
       width: 100%;
       height: 200px;
       border-radius: 0 0 10px 0;
+      .operation {
+        display: flex;
+        color: $font-icon-color;
+        line-height: 1.2em;
+        .deep {
+          padding-right: 10px;
+        }
+      }
     }
   }
 }

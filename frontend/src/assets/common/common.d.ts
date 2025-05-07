@@ -16,4 +16,11 @@ interface UserInfo {
   password: string
 }
 
-export { DialogueInputDto, Record, UserInfo }
+interface StyleChange {
+  'background-color': string
+  'border-color': string
+  color: string
+  outline: string
+}
+
+export { DialogueInputDto, Record, UserInfo, StyleChange }
