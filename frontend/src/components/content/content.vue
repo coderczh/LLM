@@ -86,7 +86,7 @@
       </div>
       <div class="answer">
         <div class="operation">
-          <div class="deep" @click="deep">
+          <div class="deep" @click="operation('deep')">
             <el-button round :style="deepOperation">
               <template #icon>
                 <img src="@/assets/img/deep.png" style="width: 16px; height: 16px" />
@@ -94,7 +94,7 @@
               深度思考
             </el-button>
           </div>
-          <div class="online" @click="online">
+          <div class="online" @click="operation('online')">
             <el-button round :style="onlineOperation">
               <template #icon>
                 <img src="@/assets/img/online.png" style="width: 18px; height: 18px" />
@@ -126,52 +126,19 @@
 import type { StyleChange } from '@/assets/common/common'
 import { Search, Promotion } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
+import { NORMAL_STYLE, SELECT_STYLE } from '@/assets/common/constant'
 
-const deepOperation = reactive<StyleChange>({
-  'background-color': '',
-  'border-color': '',
-  color: '#777',
-  outline: '',
-})
-const deep = () => {
-  if (deepOperation.color === '#777') {
-    Object.assign(deepOperation, {
-      'background-color': 'var(--el-button-hover-bg-color)',
-      'border-color': 'var(--el-button-hover-border-color)',
-      color: 'var(--el-button-hover-text-color)',
-      outline: 'none',
-    })
+const deepOperation = reactive<StyleChange>(JSON.parse(JSON.stringify(NORMAL_STYLE)))
+const onlineOperation = reactive<StyleChange>(JSON.parse(JSON.stringify(NORMAL_STYLE)))
+const operation = (type) => {
+  if (deepOperation.color === '#777' && type === 'deep') {
+    Object.assign(deepOperation, SELECT_STYLE)
+  } else if (onlineOperation.color === '#777' && type === 'online') {
+    Object.assign(onlineOperation, SELECT_STYLE)
+  } else if (type === 'deep') {
+    Object.assign(deepOperation, NORMAL_STYLE)
   } else {
-    Object.assign(deepOperation, {
-      'background-color': '',
-      'border-color': '',
-      color: '',
-      outline: '',
-    })
-  }
-}
-
-const onlineOperation = reactive<StyleChange>({
-  'background-color': '',
-  'border-color': '',
-  color: '#777',
-  outline: '',
-})
-const online = () => {
-  if (onlineOperation.color === '#777') {
-    Object.assign(onlineOperation, {
-      'background-color': 'var(--el-button-hover-bg-color)',
-      'border-color': 'var(--el-button-hover-border-color)',
-      color: 'var(--el-button-hover-text-color)',
-      outline: 'none',
-    })
-  } else {
-    Object.assign(onlineOperation, {
-      'background-color': '',
-      'border-color': '',
-      color: '#777',
-      outline: '',
-    })
+    Object.assign(onlineOperation, NORMAL_STYLE)
   }
 }
 
