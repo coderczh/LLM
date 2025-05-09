@@ -24,62 +24,26 @@
           </div>
         </div>
         <div class="spot">
-          <div class="office">
-            <div class="office-name">效率办公</div>
-            <div class="office-type">
-              <div class="office-type-item">
-                <div class="office-type-item-img">
-                  <img src="@/assets/img/search.png" style="width: 30px; height: 30px" />
-                </div>
-                <div class="office-type-item-text">智慧搜索</div>
-              </div>
-              <div class="office-type-item">
-                <div class="office-type-item-img">
-                  <img src="@/assets/img/ppt.png" style="width: 30px; height: 30px" />
-                </div>
-                <div class="office-type-item-text">PPT创作</div>
-              </div>
-              <div class="office-type-item">
-                <div class="office-type-item-img">
-                  <img src="@/assets/img/read.png" style="width: 30px; height: 30px" />
-                </div>
-                <div class="office-type-item-text">阅读助手</div>
-              </div>
-              <div class="office-type-item">
-                <div class="office-type-item-img">
-                  <img src="@/assets/img/translate.png" style="width: 30px; height: 30px" />
-                </div>
-                <div class="office-type-item-text">语言翻译</div>
-              </div>
+          <div class="spot-type">
+            <div class="spot-type-name">效率办公</div>
+            <div class="spot-type-arr">
+              <spot
+                v-for="(item, index) in officeSpot"
+                :key="index"
+                :img="item.img"
+                :text="item.text"
+              />
             </div>
           </div>
-          <div class="office" style="margin-left: 20px">
-            <div class="office-name">编码助手</div>
-            <div class="office-type">
-              <div class="office-type-item">
-                <div class="office-type-item-img">
-                  <img src="@/assets/img/bug.png" style="width: 30px; height: 30px" />
-                </div>
-                <div class="office-type-item-text">bug修复</div>
-              </div>
-              <div class="office-type-item">
-                <div class="office-type-item-img">
-                  <img src="@/assets/img/flaw.png" style="width: 30px; height: 30px" />
-                </div>
-                <div class="office-type-item-text">漏洞分析</div>
-              </div>
-              <div class="office-type-item">
-                <div class="office-type-item-img">
-                  <img src="@/assets/img/code.png" style="width: 30px; height: 30px" />
-                </div>
-                <div class="office-type-item-text">代码续写</div>
-              </div>
-              <div class="office-type-item">
-                <div class="office-type-item-img">
-                  <img src="@/assets/img/explain.png" style="width: 30px; height: 30px" />
-                </div>
-                <div class="office-type-item-text">代码解释</div>
-              </div>
+          <div class="spot-type" style="margin-left: 20px">
+            <div class="spot-type-name">编码助手</div>
+            <div class="spot-type-arr">
+              <spot
+                v-for="(item, index) in codeSpot"
+                :key="index"
+                :img="item.img"
+                :text="item.text"
+              />
             </div>
           </div>
         </div>
@@ -127,10 +91,11 @@ import type { StyleChange } from '@/assets/common/common'
 import { Search, Promotion } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
 import { NORMAL_STYLE, SELECT_STYLE } from '@/assets/common/constant'
+import spot from './spot/spot.vue'
 
 const deepOperation = reactive<StyleChange>(JSON.parse(JSON.stringify(NORMAL_STYLE)))
 const onlineOperation = reactive<StyleChange>(JSON.parse(JSON.stringify(NORMAL_STYLE)))
-const operation = (type) => {
+const operation = (type: string) => {
   if (deepOperation.color === '#777' && type === 'deep') {
     Object.assign(deepOperation, SELECT_STYLE)
   } else if (onlineOperation.color === '#777' && type === 'online') {
@@ -143,6 +108,44 @@ const operation = (type) => {
 }
 
 const inputVal = ref<string>('')
+
+const officeSpot = reactive<any>([
+  {
+    img: 'src/assets/img/search.png',
+    text: '智慧搜索',
+  },
+  {
+    img: 'src/assets/img/ppt.png',
+    text: 'PPT创作',
+  },
+  {
+    img: 'src/assets/img/read.png',
+    text: '阅读助手',
+  },
+  {
+    img: 'src/assets/img/translate.png',
+    text: '语言翻译',
+  },
+])
+
+const codeSpot = reactive<any>([
+  {
+    img: 'src/assets/img/bug.png',
+    text: 'bug修复',
+  },
+  {
+    img: 'src/assets/img/flaw.png',
+    text: '漏洞分析',
+  },
+  {
+    img: 'src/assets/img/code.png',
+    text: '代码续写',
+  },
+  {
+    img: 'src/assets/img/explain.png',
+    text: '代码解释',
+  },
+])
 </script>
 
 <style lang="scss" scoped>
@@ -207,43 +210,22 @@ const inputVal = ref<string>('')
         width: 100%;
         height: 180px;
         display: flex;
-        .office {
+        .spot-type {
           width: 40%;
           height: 100%;
           border-radius: 10px;
           background: $theme-color-to-right;
-          .office-name {
+          .spot-type-name {
             font-size: 18px;
             font-weight: 600;
             padding: 10px 0 0 20px;
             color: $font-icon-color;
           }
-          .office-type {
+          .spot-type-arr {
             padding-top: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            .office-type-item {
-              width: 85px;
-              height: 100px;
-              background-color: #fff;
-              margin: 10px 5px;
-              border-radius: 10px;
-              .office-type-item-img {
-                width: 100%;
-                height: 60px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              }
-              .office-type-item-text {
-                font-size: 14px;
-                font-weight: 500;
-                display: flex;
-                justify-content: center;
-                color: $font-icon-color;
-              }
-            }
           }
         }
       }
