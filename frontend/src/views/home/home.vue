@@ -27,7 +27,7 @@ import 'md-editor-v3/lib/preview.css'
     width: 4vw;
   }
   .right {
-    padding: 10px 10px 10px 0;
+    margin: 10px 10px 10px 0;
     flex: 1;
   }
 }

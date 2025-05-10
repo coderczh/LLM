@@ -30,6 +30,7 @@ declare module 'vue' {
     ElUpload: typeof import('element-plus/es')['ElUpload']
     Feature: typeof import('./src/components/tab/feature/feature.vue')['default']
     LeftAside: typeof import('./src/components/left-aside/left-aside.vue')['default']
+    Login: typeof import('./src/components/tab/login/login.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Spot: typeof import('./src/components/content/spot/spot.vue')['default']

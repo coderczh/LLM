@@ -7,14 +7,22 @@
       <div class="text">百全</div>
     </div>
     <feature />
-    <div class="bottom">
+    <div class="bottom" @click="showLogin">
       <el-button color="rgba(0, 0, 0, 0.05)" size="large" circle>登录</el-button>
     </div>
   </div>
+  <login v-if="loginDialog" />
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import feature from './feature/feature.vue'
+import login from './login/login.vue'
+
+const loginDialog = ref<boolean>(false)
+const showLogin = () => {
+  loginDialog.value = true
+}
 </script>
 
 <style lang="scss" scoped>
