@@ -1,67 +1,34 @@
 <template>
   <div class="dialog">
-    <el-dialog v-model="showDialog" :show-close="false" @close="closeDialog" class="dialog">
+    <el-dialog v-model="showDialog" :show-close="false" @close="closeDialog">
       <div class="dialog-content">
         <div class="content-login">
-          <div class="login-logo">
-            <img
-              src="@/assets/img/facion.png"
-              style="width: 55px; height: 55px; border-radius: 10px; margin: 0 auto"
-            />
-          </div>
-          <div class="login-input">
-            <el-input
-              v-model="userInfo.account"
-              style="
-                width: 300px;
-                height: 65px;
-                padding-bottom: 20px;
-                font-size: 15px;
-                border-radius: 15px;
-              "
-              placeholder="账号"
-              size="large"
-            />
-            <el-input
-              v-model="userInfo.password"
-              style="
-                width: 300px;
-                height: 65px;
-                padding-bottom: 20px;
-                font-size: 15px;
-                border-radius: 15px;
-              "
-              placeholder="密码"
-              size="large"
-              show-password
-            />
-          </div>
+          <img src="@/assets/img/facion.png" class="login-logo" />
+          <account v-if="loginByAccount" />
+          <phone v-if="loginByPhone" />
           <el-divider style="width: 300px; margin: 20px auto"
-            ><span style="color: #8f8f8f; font-size: 12px; font-weight: lighter"
+            ><span style="color: #8f8f8f; font-size: 12px; font-weight: normal"
               >其他登录方式</span
             ></el-divider
           >
-          <div class="login-phone">
-            <img src="@/assets/img/phone.png" style="width: 20px; height: 20px" />
+          <div class="login-type">
+            <div class="login-type-item" style="margin-right: 10px" @click="loginByAccountClick">
+              <img src="@/assets/img/account.png" style="width: 20px; height: 20px" />
+            </div>
+            <div class="login-type-item" @click="loginByPhoneClick">
+              <img src="@/assets/img/phone.png" style="width: 20px; height: 20px" />
+            </div>
           </div>
-          <div class="login-warn">
-            <el-checkbox v-model="register" label="是否注册为新用户" size="small" />
-          </div>
-          <div class="login-button">
-            <el-button
-              style="
-                width: 260px;
-                font-size: 16px;
-                font-weight: lighter;
-                color: #fff;
-                background: #3a59d1;
-              "
-              size="large"
-            >
-              <span v-if="register">注册</span>
-              <span v-else>登录</span>
-            </el-button>
-          </div>
+          <el-checkbox
+            v-model="register"
+            label="是否注册为新用户"
+            size="small"
+            class="login-remind"
+          />
+          <el-button class="login-button" size="large">
+            <span v-if="register">注&nbsp;册</span>
+            <span v-else>登&nbsp;录</span>
+          </el-button>
         </div>
         <div class="content-img">
           <img
@@ -75,7 +42,9 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import account from './account/account.vue'
+import phone from './phone/phone.vue'
+import { ref } from 'vue'
 
 const showDialog = ref(true)
 
@@ -84,11 +53,18 @@ const closeDialog = () => {
   emit('closeDialog', true)
 }
 
-const userInfo = reactive({
-  account: '',
-  password: '',
-})
 const register = ref(false)
+
+const loginByAccount = ref(true)
+const loginByPhone = ref(false)
+const loginByAccountClick = () => {
+  loginByPhone.value = false
+  loginByAccount.value = true
+}
+const loginByPhoneClick = () => {
+  loginByAccount.value = false
+  loginByPhone.value = true
+}
 </script>
 
 <style lang="scss" scoped>
@@ -111,33 +87,42 @@ const register = ref(false)
       background-color: #fff;
       border-radius: 10px;
       .login-logo {
+        display: block;
         margin: 30px auto;
         width: 55px;
         height: 55px;
+        border-radius: 10px;
       }
-      .login-input {
-        width: 300px;
-        margin: 0 auto;
-      }
-      .login-phone {
-        width: 40px;
-        height: 40px;
-        margin: 0 auto;
+      .login-type {
         display: flex;
-        align-items: center;
         justify-content: center;
-        background-color: rgba(0, 0, 0, 0.03);
-        border-radius: 40px;
+        align-items: center;
+        .login-type-item {
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: rgba(0, 0, 0, 0.03);
+          border-radius: 40px;
+        }
       }
-      .login-warn {
+
+      .login-remind {
+        display: block;
         margin-top: 20px;
         font-size: 10px;
         text-align: center;
         margin-bottom: 30px;
       }
       .login-button {
-        width: 260px;
+        display: block;
         margin: 0 auto;
+        width: 260px;
+        font-size: 16px;
+        font-weight: normal;
+        color: #fff;
+        background: #3a59d1;
       }
     }
     .content-img {
@@ -153,6 +138,10 @@ const register = ref(false)
 
 :deep(.el-checkbox) {
   color: #818181;
-  font-weight: lighter;
+  font-weight: normal;
+}
+
+:deep(.el-input__wrapper) {
+  border-radius: 10px;
 }
 </style>

@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Account: typeof import('./src/components/tab/login/account/account.vue')['default']
     Aside: typeof import('./src/components/tab/aside.vue')['default']
     Content: typeof import('./src/components/content/content.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
@@ -32,6 +33,8 @@ declare module 'vue' {
     Feature: typeof import('./src/components/tab/feature/feature.vue')['default']
     LeftAside: typeof import('./src/components/left-aside/left-aside.vue')['default']
     Login: typeof import('./src/components/tab/login/login.vue')['default']
+    Phone: typeof import('./src/components/tab/login/phone/phone.vue')['default']
+    Phont: typeof import('./src/components/tab/login/phone/phont.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Spot: typeof import('./src/components/content/spot/spot.vue')['default']
