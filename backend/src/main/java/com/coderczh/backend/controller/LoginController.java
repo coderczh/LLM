@@ -13,13 +13,9 @@ public class LoginController {
     @Resource
     private LoginService loginService;
 
-    @PostMapping("/user-info")
+    @PostMapping("/account")
     public ResultData<UserInfo> getUserInfo(@RequestBody UserInfo userInfo) {
-        return loginService.selectUserInfo(userInfo);
-    }
-
-    @PutMapping("/user-info")
-    public ResultData<Integer> alterUserInfo(@RequestBody UserInfo userInfo) {
-        return loginService.updateUserInfo(userInfo);
+        System.out.println(userInfo);
+        return null;
     }
 }

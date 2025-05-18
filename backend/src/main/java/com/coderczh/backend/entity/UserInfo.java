@@ -18,7 +18,7 @@ import java.io.Serializable;
 public class UserInfo implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 3152862247589524593L;
+    private static final long serialVersionUID = -6102437406436586960L;
 
     /**
      * 主键ID
@@ -27,10 +27,10 @@ public class UserInfo implements Serializable {
     private Integer id;
 
     /**
-     * 工号
+     * 昵称
      */
-    @TableField("job_no")
-    private String jobNo;
+    @TableField("nick_name")
+    private String nickName;
 
     /**
      * 头像
@@ -39,20 +39,32 @@ public class UserInfo implements Serializable {
     private String avatar;
 
     /**
-     * 昵称
-     */
-    @TableField("nick_name")
-    private String nickName;
-
-    /**
      * 性别
      */
     @TableField("gender")
     private String gender;
 
     /**
+     * 账号
+     */
+    @TableField("account_no")
+    private String accountNo;
+
+    /**
      * 密码
      */
     @TableField("password")
     private String password;
+
+    /**
+     * 密码
+     */
+    @TableField("phone_no")
+    private String phoneNo;
+
+    /**
+     * 邮箱
+     */
+    @TableField("email")
+    private String email;
 }

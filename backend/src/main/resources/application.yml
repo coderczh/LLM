@@ -8,7 +8,7 @@ server:
 spring:
   servlet:
     multipart:
-      max-file-size: 100MB     # 文件大小限制（参考网页1[1](@ref)）
+      max-file-size: 100MB
       max-request-size: 200MB
   profiles:
     active: druid
@@ -30,10 +30,3 @@ mybatis-plus:
 
 logging:
   config: classpath:logback.xml
-
-
-deepseek:
-  # 硅基流动的url
-  base-url: https://api.siliconflow.cn/v1
-  # 秘钥(自己注册硅基的账号，并申请即可)
-  api-key: sk-izxrtjnozdcvzttaqnrxdpphariewkiskaldqpitbcoafucr

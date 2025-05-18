@@ -4,8 +4,8 @@
       <div class="dialog-content">
         <div class="content-login">
           <img src="@/assets/img/facion.png" class="login-logo" />
-          <account v-if="loginByAccount" />
-          <phone v-if="loginByPhone" />
+          <account v-if="loginByAccount" ref="accountRef" />
+          <phone v-if="loginByPhone" ref="phoneRef" />
           <el-divider style="width: 300px; margin: 20px auto"
             ><span style="color: #8f8f8f; font-size: 12px; font-weight: normal"
               >其他登录方式</span
@@ -25,7 +25,7 @@
             size="small"
             class="login-remind"
           />
-          <el-button class="login-button" size="large">
+          <el-button class="login-button" size="large" @click="submitClick">
             <span v-if="register">注&nbsp;册</span>
             <span v-else>登&nbsp;录</span>
           </el-button>
@@ -42,9 +42,11 @@
 </template>
 
 <script lang="ts" setup>
+import { ElMessage } from 'element-plus'
 import account from './account/account.vue'
 import phone from './phone/phone.vue'
 import { ref } from 'vue'
+import { loginStore } from '@/stores/tab/tab'
 
 const showDialog = ref(true)
 
@@ -64,6 +66,29 @@ const loginByAccountClick = () => {
 const loginByPhoneClick = () => {
   loginByAccount.value = false
   loginByPhone.value = true
+}
+
+const accountRef = ref()
+const phoneRef = ref()
+const useLoginStore = loginStore()
+const submitClick = () => {
+  if (loginByAccount.value) {
+    if (accountRef.value.userInfo.accountNo === '') {
+      ElMessage({
+        type: 'warning',
+        message: '账号不能为空',
+      })
+    } else if (accountRef.value.userInfo.password === '') {
+      ElMessage({
+        type: 'warning',
+        message: '密码不能为空',
+      })
+    } else {
+      useLoginStore.getUserInfo(accountRef.value.userInfo)
+    }
+  } else {
+    console.log(phoneRef.value.phoneInfo)
+  }
 }
 </script>
 

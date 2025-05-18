@@ -1,7 +1,7 @@
 <template>
   <div class="login-account">
     <el-input
-      v-model="userInfo.account"
+      v-model="userInfo.accountNo"
       class="login-input"
       placeholder="请输入账号"
       size="large"
@@ -21,8 +21,12 @@
 import { reactive } from 'vue'
 
 const userInfo = reactive({
-  account: '',
+  accountNo: '',
   password: '',
+})
+
+defineExpose({
+  userInfo,
 })
 </script>
 
@@ -31,9 +35,8 @@ const userInfo = reactive({
   width: 300px;
   margin: 0 auto;
   .login-input {
-    width: 300px;
-    height: 65px;
-    padding-bottom: 20px;
+    height: 45px;
+    margin-bottom: 20px;
     font-size: 15px;
     border-radius: 15px;
   }

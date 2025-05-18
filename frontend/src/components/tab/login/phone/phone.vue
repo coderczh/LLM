@@ -36,6 +36,10 @@ const phoneInfo = reactive({
 const getVerifyCodeClick = () => {
   console.log('===')
 }
+
+defineExpose({
+  phoneInfo,
+})
 </script>
 
 <style lang="scss" scoped>
