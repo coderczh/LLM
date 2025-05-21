@@ -6,17 +6,30 @@ server:
     enabled: false
 
 spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://43.137.8.130:3306/llm?characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 080923
+  data:
+    redis:
+      host: 43.137.8.130
+      port: 6379
+      password: 080923
+      database: 0
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-idle: 16
+          min-idle: 8
+          max-active: 32
+          max-wait: 8ms
   servlet:
     multipart:
       max-file-size: 100MB
       max-request-size: 200MB
   profiles:
     active: druid
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://43.137.8.130:3306/llm?characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
-    username: root
-    password: 080923
 
 mybatis-plus:
   global-config:

@@ -87,7 +87,17 @@ const submitClick = () => {
       useLoginStore.getUserInfo(accountRef.value.userInfo)
     }
   } else {
-    console.log(phoneRef.value.phoneInfo)
+    if (phoneRef.value.phoneInfo.phoneNo === '') {
+      ElMessage({
+        type: 'warning',
+        message: '手机号不能为空',
+      })
+    } else if (phoneRef.value.phoneInfo.verifyCode === '') {
+      ElMessage({
+        type: 'warning',
+        message: '验证码不能为空',
+      })
+    }
   }
 }
 </script>

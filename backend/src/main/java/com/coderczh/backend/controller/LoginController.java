@@ -18,4 +18,9 @@ public class LoginController {
         System.out.println(userInfo);
         return null;
     }
+
+    @PostMapping("/verify-code")
+    public ResultData<String> getVerifyCode(@RequestBody String phoneNo) {
+        return loginService.getVerifyCode(phoneNo);
+    }
 }

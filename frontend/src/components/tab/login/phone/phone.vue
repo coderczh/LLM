@@ -17,7 +17,7 @@
       size="large"
     >
       <template #suffix>
-        <span style="font-size: 13px" @click="getVerifyCodeClick"
+        <span style="font-size: 13px; cursor: pointer" @click="getVerifyCodeClick"
           ><el-divider direction="vertical" /> 获取验证码
         </span>
       </template>
@@ -26,6 +26,7 @@
 </template>
 
 <script lang="ts" setup>
+import { getVerifyCodeReq } from '@/service/core/tab/tab'
 import { reactive } from 'vue'
 
 const phoneInfo = reactive({
@@ -33,8 +34,9 @@ const phoneInfo = reactive({
   verifyCode: '',
 })
 
-const getVerifyCodeClick = () => {
-  console.log('===')
+const getVerifyCodeClick = async () => {
+  const res = await getVerifyCodeReq(phoneInfo.phoneNo)
+  console.log(res.data)
 }
 
 defineExpose({
