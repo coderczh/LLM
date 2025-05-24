@@ -16,11 +16,12 @@ const loginStore = defineStore('login', {
     email: '',
   }),
   actions: {
-    async getUserInfo(userInfo: any) {
-      const res = await getUserInfoReq(userInfo)
+    async getUserInfo(userInfo: any, register: boolean) {
+      const res = await getUserInfoReq(userInfo, register)
       if (res.data.code === SUCCESS_CODE) {
         localCache.setCache('userInfo', res.data.data)
       } else {
+        ElMessage.closeAll()
         ElMessage({
           type: 'error',
           message: res.data.message,

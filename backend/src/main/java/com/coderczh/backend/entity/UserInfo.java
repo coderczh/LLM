@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,12 +15,9 @@ import java.io.Serializable;
  * @since 2025-04-16 14:49:06
  */
 @Data
+@Accessors(chain = true)
 @TableName("tbl_user_info")
-public class UserInfo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -6102437406436586960L;
-
+public class UserInfo {
     /**
      * 主键ID
      */

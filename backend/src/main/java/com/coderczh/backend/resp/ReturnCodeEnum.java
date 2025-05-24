@@ -33,7 +33,8 @@ public enum ReturnCodeEnum {
      * 业务级返回码
      */
     REQUEST_FREQUENT_ERR("1000", "请求频繁，请稍后再试"),
-    UPDATE_USER_INFO_FAIL("1001", "用户信息更新失败"),;
+    USER_INFO_ERR("1001", "账户信息错误，登录失败，请重试"),
+    USER_REGISTER_ERR("1002", "注册失败，请重试");
 
     /**
      * 返回码

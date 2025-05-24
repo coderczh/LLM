@@ -1,13 +1,13 @@
 <template>
   <div class="login-account">
     <el-input
-      v-model="userInfo.accountNo"
+      v-model="accountInfo.accountNo"
       class="login-input"
       placeholder="请输入账号"
       size="large"
     />
     <el-input
-      v-model="userInfo.password"
+      v-model="accountInfo.password"
       class="login-input"
       placeholder="请输入密码"
       size="large"
@@ -20,13 +20,13 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 
-const userInfo = reactive({
+const accountInfo = reactive({
   accountNo: '',
   password: '',
 })
 
 defineExpose({
-  userInfo,
+  accountInfo,
 })
 </script>
 

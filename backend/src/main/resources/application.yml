@@ -2,11 +2,12 @@ server:
   port: 8888
   servlet:
     context-path: /llm
-  compression:
-    enabled: false
 
 spring:
+  profiles:
+    active: druid
   datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://43.137.8.130:3306/llm?characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: root
@@ -28,8 +29,6 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 200MB
-  profiles:
-    active: druid
 
 mybatis-plus:
   global-config:

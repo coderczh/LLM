@@ -26,7 +26,9 @@
 </template>
 
 <script lang="ts" setup>
+import { SUCCESS_CODE, verifyPhoneNo } from '@/assets/common/constant'
 import { getVerifyCodeReq } from '@/service/core/tab/tab'
+import { ElMessage } from 'element-plus'
 import { reactive } from 'vue'
 
 const phoneInfo = reactive({
@@ -35,8 +37,29 @@ const phoneInfo = reactive({
 })
 
 const getVerifyCodeClick = async () => {
+  if (!verifyPhoneNo(phoneInfo.phoneNo)) {
+    ElMessage({
+      type: 'error',
+      message: '手机号格式错误',
+      plain: true,
+    })
+    return
+  }
   const res = await getVerifyCodeReq(phoneInfo.phoneNo)
-  console.log(res.data)
+  if (res.data.code === SUCCESS_CODE) {
+    ElMessage({
+      type: 'success',
+      message: `您的验证码为：${res.data.data}，一分钟内有效`,
+      plain: true,
+      duration: 5000,
+    })
+  } else {
+    ElMessage({
+      type: 'error',
+      message: res.data.message,
+      plain: true,
+    })
+  }
 }
 
 defineExpose({
