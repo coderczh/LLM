@@ -29,8 +29,8 @@
             <span v-if="register">注&nbsp;册</span>
             <span v-else>登&nbsp;录</span>
           </el-button>
-          <el-button class="login-button" size="large" :loading-icon="Eleme" loading v-else>
-            正在登录/注册中
+          <el-button class="login-button" size="large" :loading-icon="SwitchFilled" loading v-else>
+            <span>正在登录/注册中</span>
           </el-button>
         </div>
         <div class="content-img">
@@ -50,7 +50,7 @@ import account from './account/account.vue'
 import phone from './phone/phone.vue'
 import { ref } from 'vue'
 import { loginStore } from '@/stores/tab/tab'
-import { Eleme } from '@element-plus/icons-vue'
+import { SwitchFilled } from '@element-plus/icons-vue'
 
 const showDialog = ref(true)
 
@@ -76,11 +76,8 @@ const accountRef = ref()
 const phoneRef = ref()
 const useLoginStore = loginStore()
 const loading = ref(false)
-const submitClick = () => {
+const submitClick = async () => {
   loading.value = true
-  setTimeout(() => {
-    console.log('延时结束')
-  }, 5000)
   if (loginByAccount.value) {
     const accountNo = accountRef.value.accountInfo.accountNo.trim()
     const password = accountRef.value.accountInfo.password.trim()
@@ -95,7 +92,7 @@ const submitClick = () => {
         message: '密码错误',
       })
     } else {
-      useLoginStore.getUserInfo(accountRef.value.accountInfo, register.value)
+      await useLoginStore.getUserInfo(accountRef.value.accountInfo, register.value)
     }
   } else if (phoneRef.value.phoneInfo.verifyCode.trim().length !== 6) {
     ElMessage({
@@ -103,7 +100,7 @@ const submitClick = () => {
       message: '验证码错误',
     })
   } else {
-    useLoginStore.getUserInfo(phoneRef.value.phoneInfo, register.value)
+    await useLoginStore.getUserInfo(phoneRef.value.phoneInfo, register.value)
   }
   loading.value = false
 }
@@ -158,7 +155,9 @@ const submitClick = () => {
         margin-bottom: 30px;
       }
       .login-button {
-        display: block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         margin: 0 auto;
         width: 260px;
         font-size: 16px;

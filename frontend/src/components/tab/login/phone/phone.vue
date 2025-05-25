@@ -18,7 +18,9 @@
     >
       <template #suffix>
         <span style="font-size: 13px; cursor: pointer" @click="getVerifyCodeClick"
-          ><el-divider direction="vertical" /> 获取验证码
+          ><el-divider direction="vertical" />
+          <span v-if="countDown === 0">获取验证码</span>
+          <span v-else>{{ countDown }}秒后重发</span>
         </span>
       </template>
     </el-input>
@@ -29,14 +31,18 @@
 import { SUCCESS_CODE, verifyPhoneNo } from '@/assets/common/constant'
 import { getVerifyCodeReq } from '@/service/core/tab/tab'
 import { ElMessage } from 'element-plus'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 
 const phoneInfo = reactive({
   phoneNo: '',
   verifyCode: '',
 })
 
+const countDown = ref(0)
 const getVerifyCodeClick = async () => {
+  if (countDown.value !== 0) {
+    return
+  }
   if (!verifyPhoneNo(phoneInfo.phoneNo)) {
     ElMessage({
       type: 'error',
@@ -45,6 +51,14 @@ const getVerifyCodeClick = async () => {
     })
     return
   }
+  countDown.value = 60
+  const intervalId = window.setInterval(() => {
+    if (countDown.value > 0) {
+      countDown.value--
+    } else {
+      clearInterval(intervalId)
+    }
+  }, 1000)
   const res = await getVerifyCodeReq(phoneInfo.phoneNo)
   if (res.data.code === SUCCESS_CODE) {
     ElMessage({
@@ -59,6 +73,7 @@ const getVerifyCodeClick = async () => {
       message: res.data.message,
       plain: true,
     })
+    countDown.value = 0
   }
 }
 

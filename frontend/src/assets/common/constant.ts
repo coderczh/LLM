@@ -2,6 +2,8 @@ const SUCCESS_CODE = '200'
 
 const verifyPhoneNo = (phoneNo: string) => /^1[3-9]\d{9}$/.test(phoneNo.trim())
 
+const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time))
+
 const NORMAL_STYLE = {
   'background-color': '',
   'border-color': '',
@@ -15,4 +17,4 @@ const SELECT_STYLE = {
   outline: 'none',
 }
 
-export { SUCCESS_CODE, NORMAL_STYLE, SELECT_STYLE, verifyPhoneNo }
+export { SUCCESS_CODE, NORMAL_STYLE, SELECT_STYLE, verifyPhoneNo, sleep }

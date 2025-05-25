@@ -11,18 +11,23 @@ const hyRequest = new HYRequest({
       config.headers.setAuthorization('Bearer sk-izxrtjnozdcvzttaqnrxdpphariewkiskaldqpitbcoafucr')
       return config
     },
-    /*       requestInterceptorCatch: (err) => {
-        console.log('请求失败的拦截')
-        return err
-      },
-      responseInterceptor: (res) => {
+    /* requestInterceptorCatch: (err) => {
+      console.log('请求失败的拦截')
+      console.log(err)
+      return err
+    },
+       responseInterceptor: (res) => {
         console.log('请求成功的拦截')
         return res
-      },
-      responseInterceptorCatch: (err) => {
-        console.log('响应成功的拦截')
-        return err
-      } */
+      },*/
+    responseInterceptorCatch: () => {
+      return {
+        data: {
+          code: '500',
+          message: '请求失败，请稍后重试',
+        },
+      }
+    },
   },
 })
 
