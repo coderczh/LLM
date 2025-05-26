@@ -7,8 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.io.Serial;
-import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author 天天向上
@@ -25,6 +24,12 @@ public class UserInfo {
     private Integer id;
 
     /**
+     * 真实姓名
+     */
+    @TableField("real_name")
+    private String realName;
+
+    /**
      * 昵称
      */
     @TableField("nick_name")
@@ -37,10 +42,40 @@ public class UserInfo {
     private String avatar;
 
     /**
+     * 年龄
+     */
+    @TableField("age")
+    private Integer age;
+
+    /**
      * 性别
      */
     @TableField("gender")
     private String gender;
+
+    /**
+     * 身份证号
+     */
+    @TableField("id_card")
+    private String idCard;
+
+    /**
+     * 邮箱
+     */
+    @TableField("email")
+    private String email;
+
+    /**
+     * 地址
+     */
+    @TableField("address")
+    private String address;
+
+    /**
+     * 手机号
+     */
+    @TableField("phone_no")
+    private String phoneNo;
 
     /**
      * 账号
@@ -54,15 +89,28 @@ public class UserInfo {
     @TableField("password")
     private String password;
 
-    /**
-     * 密码
-     */
-    @TableField("phone_no")
-    private String phoneNo;
 
     /**
-     * 邮箱
+     * 创建日期
      */
-    @TableField("email")
-    private String email;
+    @TableField("create_date")
+    private Date createDate;
+
+    /**
+     * 创建时间
+     */
+    @TableField("create_time")
+    private Date createTime;
+
+    /**
+     * 更新日期
+     */
+    @TableField("update_date")
+    private Date updateDate;
+
+    /**
+     * 更新日期
+     */
+    @TableField("update_time")
+    private Date updateTime;
 }

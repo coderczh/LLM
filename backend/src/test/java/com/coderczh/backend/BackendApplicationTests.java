@@ -1,10 +1,14 @@
 package com.coderczh.backend;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.coderczh.backend.dao.UserInfoDao;
+import com.coderczh.backend.entity.UserInfo;
 import io.github.yindz.random.RandomSource;
 import io.github.yindz.random.constant.Province;
 import io.github.yindz.random.source.PersonInfoSource;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -17,15 +21,28 @@ import java.util.Map;
 @SpringBootTest
 class BackendApplicationTests {
 
+
+
 	private static final String[] EMAIL_SUFFIX = {"gmail.com", "yahoo.com", "163.com", "126.com", "qq.com", "foxmail.com",
 			"outlook.com", "hotmail.com", "icloud.com", "sina.com"};
 
+	@Resource
+	private UserInfoDao userInfoDao;
+
 	@Test
 	void randomUserInfo() {
-		for (int i = 0; i < 20; i++) {
-			Map<String, String> userInfo = getUserInfo(RandomUtil.randomInt(0, 2));
-			userInfo.forEach((k, v) -> System.out.println(k + "  ====>  " + v));
-			System.out.println("======================================");
+		for (int i = 0; i < 5; i++) {
+			Map<String, String> userInfoMap = getUserInfo(RandomUtil.randomInt(0, 2));
+			UserInfo userInfo = Convert.convert(UserInfo.class, userInfoMap);
+			if (userInfo.getAddress() == null) {
+				continue;
+			}
+			if ("男".equals(userInfo.getGender())) {
+				userInfo.setAvatar("https://llm-1258823864.cos.ap-shanghai.myqcloud.com/boy.png");
+			} else {
+				userInfo.setAvatar("https://llm-1258823864.cos.ap-shanghai.myqcloud.com/girl.png");
+			}
+			userInfoDao.insert(userInfo);
 		}
 
 	}
@@ -59,9 +76,10 @@ class BackendApplicationTests {
 		String phoneNo = RandomSource.personInfoSource().randomChineseMobile();
 		userInfoMap.put("phoneNo", phoneNo);
 		// 账号
-		userInfoMap.put("account", personInfoSource.randomNickName(10));
+		userInfoMap.put("accountNo", personInfoSource.randomNickName(10));
 		// 密码
-		userInfoMap.put("password", personInfoSource.randomStrongPassword(16, false));
+		int passwordLength = RandomUtil.randomInt(6, 16);
+		userInfoMap.put("password", personInfoSource.randomStrongPassword(passwordLength, false));
 		// 创建日期
 		LocalDate beginDate = LocalDate.of(2000, 1, 1);
 		LocalDate endDate = LocalDate.of(2025, 12, 31);
