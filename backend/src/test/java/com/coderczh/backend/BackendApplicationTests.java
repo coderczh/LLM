@@ -2,13 +2,18 @@ package com.coderczh.backend;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
+import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.coderczh.backend.dao.UserInfoDao;
 import com.coderczh.backend.entity.UserInfo;
 import io.github.yindz.random.RandomSource;
 import io.github.yindz.random.constant.Province;
 import io.github.yindz.random.source.PersonInfoSource;
 import jakarta.annotation.Resource;
+import org.bouncycastle.jcajce.provider.symmetric.AES;
+import org.bouncycastle.jcajce.provider.symmetric.DES;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -31,7 +36,13 @@ class BackendApplicationTests {
 
 	@Test
 	void randomUserInfo() {
-		for (int i = 0; i < 5; i++) {
+		String content = "test中文";
+		SymmetricCrypto sm4 = new SymmetricCrypto(SymmetricAlgorithm.PBEWithSHA1AndDESede);
+		String encryptHex = sm4.encryptHex(content);
+		System.out.println(encryptHex);
+		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);//test中文
+		System.out.println(decryptStr);
+		/*for (int i = 0; i < 5; i++) {
 			Map<String, String> userInfoMap = getUserInfo(RandomUtil.randomInt(0, 2));
 			UserInfo userInfo = Convert.convert(UserInfo.class, userInfoMap);
 			if (userInfo.getAddress() == null) {
@@ -43,7 +54,7 @@ class BackendApplicationTests {
 				userInfo.setAvatar("https://llm-1258823864.cos.ap-shanghai.myqcloud.com/girl.png");
 			}
 			userInfoDao.insert(userInfo);
-		}
+		}*/
 
 	}
 
