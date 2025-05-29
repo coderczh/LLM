@@ -4,6 +4,8 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
+import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.coderczh.backend.common.util.RedisUtil;
 import com.coderczh.backend.dao.UserInfoDao;
@@ -27,6 +29,8 @@ public class LoginServiceImpl implements LoginService {
     @Resource
     private RedisUtil redisUtil;
 
+    private static final SymmetricCrypto SM4 = new SymmetricCrypto(SymmetricAlgorithm.PBEWithSHA1AndDESede);
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultData<LoginOutputDTO> loginByAccount(String register, LoginInputDTO loginInputDTO) {
@@ -34,8 +38,9 @@ public class LoginServiceImpl implements LoginService {
         // 登录
         if (notRegister.equals(register)) {
             QueryWrapper<UserInfo> wrapper = new QueryWrapper<>();
+            String password = SM4.decryptStr(loginInputDTO.getPassword());
             wrapper.eq("account_no", loginInputDTO.getAccountNo())
-                    .eq("password", loginInputDTO.getPassword());
+                    .eq("password", password);
             UserInfo userInfo = userInfoDao.selectOne(wrapper);
             if (userInfo == null) {
                 return ResultData.fail(ReturnCodeEnum.USER_INFO_ERR.getCode(), ReturnCodeEnum.USER_INFO_ERR.getMessage());
@@ -45,7 +50,10 @@ public class LoginServiceImpl implements LoginService {
         } else {
             // 注册
             int registerCount = 1;
-            if (userInfoDao.insert(Convert.convert(UserInfo.class, loginInputDTO)) == registerCount) {
+            String password = SM4.encryptHex(loginInputDTO.getPassword());
+            loginInputDTO.setPassword(password);
+            UserInfo userInfo = Convert.convert(UserInfo.class, loginInputDTO);
+            if (userInfoDao.insert(userInfo) == registerCount) {
                 LoginOutputDTO loginOutputDTO = new LoginOutputDTO();
                 loginOutputDTO.setAccountNo(loginInputDTO.getAccountNo());
                 return ResultData.success(loginOutputDTO);
