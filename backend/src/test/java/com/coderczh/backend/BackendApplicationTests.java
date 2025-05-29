@@ -2,7 +2,6 @@ package com.coderczh.backend;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import cn.hutool.crypto.symmetric.SymmetricCrypto;
@@ -12,49 +11,55 @@ import io.github.yindz.random.RandomSource;
 import io.github.yindz.random.constant.Province;
 import io.github.yindz.random.source.PersonInfoSource;
 import jakarta.annotation.Resource;
-import org.bouncycastle.jcajce.provider.symmetric.AES;
-import org.bouncycastle.jcajce.provider.symmetric.DES;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SpringBootTest
 class BackendApplicationTests {
 
-
-
 	private static final String[] EMAIL_SUFFIX = {"gmail.com", "yahoo.com", "163.com", "126.com", "qq.com", "foxmail.com",
 			"outlook.com", "hotmail.com", "icloud.com", "sina.com"};
+
+	private static final SymmetricCrypto SM4 = new SymmetricCrypto(SymmetricAlgorithm.PBEWithSHA1AndDESede);
 
 	@Resource
 	private UserInfoDao userInfoDao;
 
 	@Test
 	void randomUserInfo() {
-		String content = "test中文";
-		SymmetricCrypto sm4 = new SymmetricCrypto(SymmetricAlgorithm.PBEWithSHA1AndDESede);
-		String encryptHex = sm4.encryptHex(content);
-		System.out.println(encryptHex);
-		String decryptStr = sm4.decryptStr(encryptHex, CharsetUtil.CHARSET_UTF_8);//test中文
-		System.out.println(decryptStr);
-		/*for (int i = 0; i < 5; i++) {
+		List<UserInfo> userInfoList = new ArrayList<>();
+		for (int i = 1; i <= 9000; i++) {
 			Map<String, String> userInfoMap = getUserInfo(RandomUtil.randomInt(0, 2));
 			UserInfo userInfo = Convert.convert(UserInfo.class, userInfoMap);
 			if (userInfo.getAddress() == null) {
 				continue;
 			}
+			String encryptHex = SM4.encryptHex(userInfo.getPassword());
+			userInfo.setPassword(encryptHex);
 			if ("男".equals(userInfo.getGender())) {
 				userInfo.setAvatar("https://llm-1258823864.cos.ap-shanghai.myqcloud.com/boy.png");
 			} else {
 				userInfo.setAvatar("https://llm-1258823864.cos.ap-shanghai.myqcloud.com/girl.png");
 			}
-			userInfoDao.insert(userInfo);
-		}*/
+			userInfoList.add(userInfo);
+			if (i % 500 == 0) {
+				System.out.println("=============================== 第" + i / 500 + "轮插入数据开始 ===============================");
+				try {
+					userInfoDao.insert(userInfoList, 500);
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+                }
+                System.out.println("=============================== 第" + i / 500 + "轮插入数据结束 ===============================");
+			}
+		}
 
 	}
 
