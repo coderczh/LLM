@@ -14,6 +14,7 @@ import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,7 +29,7 @@ class BackendApplicationTests {
 	private static final String[] EMAIL_SUFFIX = {"gmail.com", "yahoo.com", "163.com", "126.com", "qq.com", "foxmail.com",
 			"outlook.com", "hotmail.com", "icloud.com", "sina.com"};
 
-	private static final SymmetricCrypto SM4 = new SymmetricCrypto(SymmetricAlgorithm.PBEWithSHA1AndDESede);
+//	private static final SymmetricCrypto SM4 = new SymmetricCrypto(SymmetricAlgorithm.PBEWithSHA1AndDESede);
 
 	@Resource
 	private UserInfoDao userInfoDao;
@@ -36,21 +37,25 @@ class BackendApplicationTests {
 	@Test
 	void randomUserInfo() {
 		List<UserInfo> userInfoList = new ArrayList<>();
-		for (int i = 1; i <= 9000; i++) {
+		for (int i = 1; i <= 1; i++) {
 			Map<String, String> userInfoMap = getUserInfo(RandomUtil.randomInt(0, 2));
 			UserInfo userInfo = Convert.convert(UserInfo.class, userInfoMap);
 			if (userInfo.getAddress() == null) {
 				continue;
 			}
-			String encryptHex = SM4.encryptHex(userInfo.getPassword());
+			// 1WrC91Kb8s
+			SymmetricCrypto SM41 = new SymmetricCrypto(SymmetricAlgorithm.PBEWithSHA1AndDESede);
+			String encryptHex = SM41.encryptHex(userInfo.getPassword());
 			userInfo.setPassword(encryptHex);
+			SymmetricCrypto SM42 = new SymmetricCrypto(SymmetricAlgorithm.PBEWithSHA1AndDESede);
+			String value = SM42.decryptStr(encryptHex);
 			if ("男".equals(userInfo.getGender())) {
 				userInfo.setAvatar("https://llm-1258823864.cos.ap-shanghai.myqcloud.com/boy.png");
 			} else {
 				userInfo.setAvatar("https://llm-1258823864.cos.ap-shanghai.myqcloud.com/girl.png");
 			}
 			userInfoList.add(userInfo);
-			if (i % 500 == 0) {
+			if (i % 1 == 0) {
 				System.out.println("=============================== 第" + i / 500 + "轮插入数据开始 ===============================");
 				try {
 					userInfoDao.insert(userInfoList, 500);
@@ -116,5 +121,13 @@ class BackendApplicationTests {
 	private String getRandomTime() {
 		LocalDateTime localDateTime = RandomSource.dateTimeSource().randomTime(2025, 5, 25);
 		return localDateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+	}
+
+	@Test
+	public void getDecrypt() {
+		PersonInfoSource personInfoSource = RandomSource.personInfoSource();
+		String password = personInfoSource.randomStrongPassword(13, false);
+		// 59a88f80a78863a966991c6c4b6b97c5
+//		System.out.println(SM4.decryptStr("d1217715094088d4a904a54d0187b2c8", StandardCharsets.UTF_8));
 	}
 }

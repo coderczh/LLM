@@ -24,7 +24,7 @@ import 'md-editor-v3/lib/preview.css'
   width: 100vw;
   height: 100vh;
   .left {
-    width: 5vw;
+    width: 4vw;
   }
   .right {
     margin: 10px 10px 10px 0;

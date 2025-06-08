@@ -206,7 +206,7 @@ const codeSpot = reactive<any>([
         }
       }
       .spot {
-        padding-top: 10px;
+        padding-top: 15px;
         width: 100%;
         height: 180px;
         display: flex;

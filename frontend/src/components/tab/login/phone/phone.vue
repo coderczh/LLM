@@ -84,10 +84,10 @@ defineExpose({
 
 <style lang="scss" scoped>
 .login-account {
-  width: 300px;
+  width: 330px;
   margin: 0 auto;
   .login-input {
-    width: 300px;
+    width: 330px;
     height: 65px;
     padding-bottom: 20px;
     font-size: 15px;

@@ -32,7 +32,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .login-account {
-  width: 300px;
+  width: 330px;
   margin: 0 auto;
   .login-input {
     height: 45px;

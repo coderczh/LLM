@@ -108,7 +108,7 @@ const submitClick = async () => {
 
 <style lang="scss" scoped>
 .dialog :deep(.el-dialog) {
-  width: 55%;
+  width: 830px;
   height: 500px;
   margin: 25vh auto 50px;
   padding: 10px 10px;

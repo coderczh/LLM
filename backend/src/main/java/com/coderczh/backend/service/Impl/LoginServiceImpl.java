@@ -38,7 +38,7 @@ public class LoginServiceImpl implements LoginService {
         // 登录
         if (notRegister.equals(register)) {
             QueryWrapper<UserInfo> wrapper = new QueryWrapper<>();
-            String password = SM4.decryptStr(loginInputDTO.getPassword());
+            String password = SM4.encryptHex(loginInputDTO.getPassword());
             wrapper.eq("account_no", loginInputDTO.getAccountNo())
                     .eq("password", password);
             UserInfo userInfo = userInfoDao.selectOne(wrapper);

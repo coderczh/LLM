@@ -1,7 +1,7 @@
 <template>
   <div class="spot-type-item">
     <div class="spot-type-item-img">
-      <img :src="img" style="width: 30px; height: 30px" />
+      <img :src="img" style="width: 35px; height: 40px" />
     </div>
     <div class="spot-type-item-text">{{ text }}</div>
   </div>
@@ -24,14 +24,14 @@ defineProps({
 
 <style lang="scss" scoped>
 .spot-type-item {
-  width: 85px;
+  width: 90px;
   height: 100px;
   background-color: #fff;
-  margin: 10px 5px;
+  margin: 10px 10px;
   border-radius: 10px;
   .spot-type-item-img {
     width: 100%;
-    height: 60px;
+    height: 70px;
     display: flex;
     justify-content: center;
     align-items: center;
