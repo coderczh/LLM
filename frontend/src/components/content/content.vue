@@ -155,12 +155,12 @@ const codeSpot = reactive<any>([
   border-radius: 10px;
   display: flex;
   .left {
-    width: 260px;
+    width: 255px;
     height: calc(100vh - 20px);
     border-radius: 10px 0 0 10px;
     border-right: 1px solid #f1f1f1;
     .top {
-      padding: 30px;
+      padding: 30px 20px;
       text-align: center;
     }
   }
@@ -169,7 +169,7 @@ const codeSpot = reactive<any>([
     border-radius: 0 10px 10px 0;
     position: relative;
     .tip {
-      width: 60%;
+      width: 75%;
       margin: 0 auto;
       height: calc(100% - 210px);
       border-radius: 0 10px 0 0;
@@ -240,7 +240,7 @@ const codeSpot = reactive<any>([
         display: flex;
         line-height: 1.2em;
         padding-bottom: 12px;
-        width: 60%;
+        width: 70%;
         padding-top: 70px;
         padding-left: 10px;
         margin: 0 auto;
@@ -249,7 +249,7 @@ const codeSpot = reactive<any>([
         }
       }
       .input {
-        width: 60%;
+        width: 70%;
         margin: 0 auto;
       }
     }
