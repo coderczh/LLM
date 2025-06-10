@@ -3,14 +3,13 @@ package com.coderczh.backend;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
-import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.coderczh.backend.dao.UserInfoDao;
 import com.coderczh.backend.entity.UserInfo;
 import io.github.yindz.random.RandomSource;
 import io.github.yindz.random.constant.Province;
 import io.github.yindz.random.source.PersonInfoSource;
 import jakarta.annotation.Resource;
+import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -29,42 +28,14 @@ class BackendApplicationTests {
 	private static final String[] EMAIL_SUFFIX = {"gmail.com", "yahoo.com", "163.com", "126.com", "qq.com", "foxmail.com",
 			"outlook.com", "hotmail.com", "icloud.com", "sina.com"};
 
-//	private static final SymmetricCrypto SM4 = new SymmetricCrypto(SymmetricAlgorithm.PBEWithSHA1AndDESede);
+	@Resource
+	private StringEncryptor stringEncryptor;
 
 	@Resource
 	private UserInfoDao userInfoDao;
 
 	@Test
 	void randomUserInfo() {
-		List<UserInfo> userInfoList = new ArrayList<>();
-		for (int i = 1; i <= 1; i++) {
-			Map<String, String> userInfoMap = getUserInfo(RandomUtil.randomInt(0, 2));
-			UserInfo userInfo = Convert.convert(UserInfo.class, userInfoMap);
-			if (userInfo.getAddress() == null) {
-				continue;
-			}
-			// 1WrC91Kb8s
-			SymmetricCrypto SM41 = new SymmetricCrypto(SymmetricAlgorithm.PBEWithSHA1AndDESede);
-			String encryptHex = SM41.encryptHex(userInfo.getPassword());
-			userInfo.setPassword(encryptHex);
-			SymmetricCrypto SM42 = new SymmetricCrypto(SymmetricAlgorithm.PBEWithSHA1AndDESede);
-			String value = SM42.decryptStr(encryptHex);
-			if ("男".equals(userInfo.getGender())) {
-				userInfo.setAvatar("https://llm-1258823864.cos.ap-shanghai.myqcloud.com/boy.png");
-			} else {
-				userInfo.setAvatar("https://llm-1258823864.cos.ap-shanghai.myqcloud.com/girl.png");
-			}
-			userInfoList.add(userInfo);
-			if (i % 1 == 0) {
-				System.out.println("=============================== 第" + i / 500 + "轮插入数据开始 ===============================");
-				try {
-					userInfoDao.insert(userInfoList, 500);
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-                }
-                System.out.println("=============================== 第" + i / 500 + "轮插入数据结束 ===============================");
-			}
-		}
 
 	}
 
@@ -126,8 +97,24 @@ class BackendApplicationTests {
 	@Test
 	public void getDecrypt() {
 		PersonInfoSource personInfoSource = RandomSource.personInfoSource();
-		String password = personInfoSource.randomStrongPassword(13, false);
-		// 59a88f80a78863a966991c6c4b6b97c5
-//		System.out.println(SM4.decryptStr("d1217715094088d4a904a54d0187b2c8", StandardCharsets.UTF_8));
+		List<UserInfo> userInfoList = new ArrayList<>();
+		for (int i = 5001; i <= 10000; i++) {
+			int passwordLength = RandomUtil.randomInt(6, 16);
+			String password = personInfoSource.randomStrongPassword(passwordLength, false);
+			UserInfo userInfo = new UserInfo();
+			userInfo.setPassword(stringEncryptor.encrypt(password)).setId(i);
+			userInfoList.add(userInfo);
+			if (i % 1000 == 0) {
+				System.out.println("=============================== 第" + i / 1000 + "轮插入数据开始 ===============================");
+				userInfoDao.updateById(userInfoList);
+				System.out.println("=============================== 第" + i / 1000 + "轮插入数据结束 ===============================");
+			}
+		}
+	}
+
+	@Test
+	public void getPassword() {
+		String decrypt = stringEncryptor.decrypt("4XjWmNVwMgMAp35SkFrnJDcEX6w2ciVmiTlH1hHexmaljNqMXWmmtxrjr/v377IO");
+		System.out.println(decrypt);
 	}
 }

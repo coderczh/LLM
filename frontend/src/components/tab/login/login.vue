@@ -51,6 +51,7 @@ import phone from './phone/phone.vue'
 import { ref } from 'vue'
 import { loginStore } from '@/stores/tab/tab'
 import { SwitchFilled } from '@element-plus/icons-vue'
+import { localCache } from '@/assets/common/cache'
 
 const showDialog = ref(true)
 
@@ -93,6 +94,13 @@ const submitClick = async () => {
       })
     } else {
       await useLoginStore.getUserInfo(accountRef.value.accountInfo, register.value)
+      if (localCache.getCache('userInfo')) {
+        ElMessage({
+          type: 'success',
+          message: '登录成功',
+        })
+        closeDialog()
+      }
     }
   } else if (phoneRef.value.phoneInfo.verifyCode.trim().length !== 6) {
     ElMessage({
