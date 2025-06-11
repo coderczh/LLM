@@ -7,17 +7,28 @@
       <div class="text">百全</div>
     </div>
     <feature />
-    <div class="bottom" @click="openDialog">
-      <el-button color="rgba(0, 0, 0, 0.05)" size="large" circle>登录</el-button>
+    <div class="bottom">
+      <div @click="openDialog" v-if="showLogin">
+        <el-button color="rgba(0, 0, 0, 0.05)" size="large" circle>登录</el-button>
+      </div>
+      <div v-else>
+        <el-avatar :src="localCache.getCache('userInfo').avatar" />
+      </div>
     </div>
   </div>
-  <login @closeDialog="closeDialog" v-if="showDialog" />
+  <login @closeDialog="closeDialog" @logged="logged" v-if="showDialog" />
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import feature from './feature/feature.vue'
 import login from './login/login.vue'
+import { localCache } from '@/assets/common/cache'
+
+const showLogin = ref<boolean>(true)
+onMounted(() => {
+  showLogin.value = !localCache.getCache('userInfo')
+})
 
 const showDialog = ref(false)
 const closeDialog = () => {
@@ -25,6 +36,10 @@ const closeDialog = () => {
 }
 const openDialog = () => {
   showDialog.value = true
+}
+
+const logged = (e: any) => {
+  showLogin.value = !e
 }
 </script>
 

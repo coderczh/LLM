@@ -21,7 +21,6 @@ const loginStore = defineStore('login', {
       if (res.data.code === SUCCESS_CODE) {
         localCache.setCache('userInfo', res.data.data)
       } else {
-        localCache.removeCache('userInfo')
         ElMessage.closeAll()
         ElMessage({
           type: 'error',

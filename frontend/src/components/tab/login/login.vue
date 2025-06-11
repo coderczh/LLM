@@ -55,9 +55,12 @@ import { localCache } from '@/assets/common/cache'
 
 const showDialog = ref(true)
 
-const emit = defineEmits(['closeDialog'])
+const emit = defineEmits(['closeDialog', 'logged'])
 const closeDialog = () => {
   emit('closeDialog', true)
+}
+const logged = (status: boolean) => {
+  emit('logged', status)
 }
 
 const register = ref(false)
@@ -100,6 +103,7 @@ const submitClick = async () => {
           message: '登录成功',
         })
         closeDialog()
+        logged(true)
       }
     }
   } else if (phoneRef.value.phoneInfo.verifyCode.trim().length !== 6) {
