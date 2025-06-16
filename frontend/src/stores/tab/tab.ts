@@ -16,8 +16,8 @@ const loginStore = defineStore('login', {
     email: '',
   }),
   actions: {
-    async getUserInfo(userInfo: any, register: boolean) {
-      const res = await getUserInfoReq(userInfo, register)
+    async getUserInfo(userInfo: any, register: boolean, loginType: string) {
+      const res = await getUserInfoReq(userInfo, register, loginType)
       if (res.data.code === SUCCESS_CODE) {
         localCache.setCache('userInfo', res.data.data)
       } else {

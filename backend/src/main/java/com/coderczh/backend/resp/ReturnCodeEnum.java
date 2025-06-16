@@ -33,8 +33,14 @@ public enum ReturnCodeEnum {
      * 业务级返回码
      */
     REQUEST_FREQUENT_ERR("1000", "请求频繁，请稍后再试"),
-    USER_INFO_ERR("1001", "账户信息错误，登录失败，请重试"),
-    USER_REGISTER_ERR("1002", "注册失败，请重试");
+    ACCOUNT_INFO_ERR("1001", "账户信息错误，登录失败，请重试"),
+    USER_REGISTER_ERR("1002", "注册失败，请重试"),
+    ACCOUNT_NO_EMPTY_ERR("1003", "账号不能为空"),
+    PASSWORD_EMPTY_ERR("1004", "密码不能为空"),
+    PHONE_NO_EMPTY_ERR("1005", "手机号码不能为空"),
+    VERIFY_CODE_EMPTY_ERR("1006", "验证码不能为空"),
+    LOGIN_TYPE_ERR("1007", "登录类型错误"),
+    PHONE_INFO_ERR("1008", "信息错误，登录失败，请重试");
 
     /**
      * 返回码

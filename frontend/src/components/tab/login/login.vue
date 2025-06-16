@@ -96,23 +96,27 @@ const submitClick = async () => {
         message: '密码错误',
       })
     } else {
-      await useLoginStore.getUserInfo(accountRef.value.accountInfo, register.value)
-      if (localCache.getCache('userInfo')) {
-        ElMessage({
-          type: 'success',
-          message: '登录成功',
-        })
-        closeDialog()
-        logged(true)
-      }
+      const loginByAccount = '0'
+      await useLoginStore.getUserInfo(accountRef.value.accountInfo, register.value, loginByAccount)
     }
-  } else if (phoneRef.value.phoneInfo.verifyCode.trim().length !== 6) {
-    ElMessage({
-      type: 'warning',
-      message: '验证码错误',
-    })
   } else {
-    await useLoginStore.getUserInfo(phoneRef.value.phoneInfo, register.value)
+    if (phoneRef.value.phoneInfo.verifyCode.trim().length !== 6) {
+      ElMessage({
+        type: 'warning',
+        message: '验证码错误',
+      })
+    } else {
+      const loginByPhone = '1'
+      await useLoginStore.getUserInfo(phoneRef.value.phoneInfo, register.value, loginByPhone)
+    }
+  }
+  if (localCache.getCache('userInfo')) {
+    ElMessage({
+      type: 'success',
+      message: '登录成功',
+    })
+    closeDialog()
+    logged(true)
   }
   loading.value = false
 }

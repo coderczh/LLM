@@ -2,8 +2,8 @@ package com.coderczh.backend.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.coderczh.backend.common.Constant;
 import com.coderczh.backend.common.util.RedisUtil;
-import com.coderczh.backend.dao.UserInfoDao;
 import com.coderczh.backend.dto.LoginInputDTO;
 import com.coderczh.backend.dto.LoginOutputDTO;
 import com.coderczh.backend.resp.ResultData;
@@ -12,22 +12,14 @@ import com.coderczh.backend.service.LoginService;
 import com.coderczh.backend.service.factory.LoginStrategyFactory;
 import com.coderczh.backend.service.strategy.LoginStrategy;
 import jakarta.annotation.Resource;
-import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LoginServiceImpl implements LoginService {
 
     @Resource
-    private UserInfoDao userInfoDao;
-
-    @Resource
     private RedisUtil redisUtil;
-
-    @Resource
-    private StringEncryptor stringEncryptor;
 
     private final LoginStrategyFactory loginStrategyFactory;
 
@@ -36,15 +28,30 @@ public class LoginServiceImpl implements LoginService {
         this.loginStrategyFactory = loginStrategyFactory;
     }
 
-    private static final String LOGIN_ACCOUNT = "ACCOUNT";
-    private static final String LOGIN_PHONE = "PHONE";
-
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public ResultData<LoginOutputDTO> loginByAccount(String loginType, String register, LoginInputDTO loginInputDTO) {
-        LoginStrategy loginStrategy = "0".equals(loginType)
-                ? loginStrategyFactory.getLoginStrategy(LOGIN_ACCOUNT)
-                : loginStrategyFactory.getLoginStrategy(LOGIN_PHONE);
+        LoginStrategy loginStrategy;
+        if (Constant.LOGIN_TYPE_ACCOUNT.equals(loginType)) {
+            if (StrUtil.isBlank(loginInputDTO.getAccountNo())) {
+                return ResultData.fail(ReturnCodeEnum.ACCOUNT_NO_EMPTY_ERR.getCode(),
+                        ReturnCodeEnum.ACCOUNT_NO_EMPTY_ERR.getMessage());
+            } else if (StrUtil.isBlank(loginInputDTO.getPassword())) {
+                return ResultData.fail(ReturnCodeEnum.PASSWORD_EMPTY_ERR.getCode(),
+                        ReturnCodeEnum.PASSWORD_EMPTY_ERR.getMessage());
+            }
+            loginStrategy = loginStrategyFactory.getLoginStrategy(Constant.LOGIN_TYPE_ACCOUNT);
+        } else if (Constant.LOGIN_TYPE_PHONE.equals(loginType)) {
+            if (StrUtil.isBlank(loginInputDTO.getPhoneNo())) {
+                return ResultData.fail(ReturnCodeEnum.PHONE_NO_EMPTY_ERR.getCode(),
+                        ReturnCodeEnum.PHONE_NO_EMPTY_ERR.getMessage());
+            } else if (StrUtil.isBlank(loginInputDTO.getVerifyCode())) {
+                return ResultData.fail(ReturnCodeEnum.VERIFY_CODE_EMPTY_ERR.getCode(),
+                        ReturnCodeEnum.VERIFY_CODE_EMPTY_ERR.getMessage());
+            }
+            loginStrategy = loginStrategyFactory.getLoginStrategy(Constant.LOGIN_TYPE_PHONE);
+        } else {
+            return ResultData.fail(ReturnCodeEnum.LOGIN_TYPE_ERR.getCode(), ReturnCodeEnum.LOGIN_TYPE_ERR.getMessage());
+        }
         return loginStrategy.login(register, loginInputDTO);
     }
 
