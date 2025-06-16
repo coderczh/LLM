@@ -1,8 +1,8 @@
 import hyRequest from '../..'
 
-const getUserInfoReq = (userInfo: any, register: boolean) => {
+const getUserInfoReq = (userInfo: any, register: boolean, loginType: string) => {
   return hyRequest.instance({
-    url: `/login/account/${register ? '0' : '1'}`,
+    url: `/login/${loginType}/${register ? '0' : '1'}`,
     method: 'POST',
     data: userInfo,
   })

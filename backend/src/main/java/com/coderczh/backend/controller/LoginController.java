@@ -14,9 +14,11 @@ public class LoginController {
     @Resource
     private LoginService loginService;
 
-    @PostMapping("/account/{register}")
-    public ResultData<LoginOutputDTO> getUserInfo(@PathVariable String register, @RequestBody LoginInputDTO loginInputDTO) {
-        return loginService.loginByAccount(register, loginInputDTO);
+    @PostMapping("/{loginType}/{register}")
+    public ResultData<LoginOutputDTO> getUserInfo(@PathVariable("loginType") String loginType,
+                                                  @PathVariable("register") String register,
+                                                  @RequestBody LoginInputDTO loginInputDTO) {
+        return loginService.loginByAccount(loginType, register, loginInputDTO);
     }
 
     @PostMapping("/verify-code")
