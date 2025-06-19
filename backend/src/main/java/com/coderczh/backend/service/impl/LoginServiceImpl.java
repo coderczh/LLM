@@ -33,20 +33,16 @@ public class LoginServiceImpl implements LoginService {
         LoginStrategy loginStrategy;
         if (Constant.LOGIN_TYPE_ACCOUNT.equals(loginType)) {
             if (StrUtil.isBlank(loginInputDTO.getAccountNo())) {
-                return ResultData.fail(ReturnCodeEnum.ACCOUNT_NO_EMPTY_ERR.getCode(),
-                        ReturnCodeEnum.ACCOUNT_NO_EMPTY_ERR.getMessage());
+                return ResultData.fail(ReturnCodeEnum.ACCOUNT_NO_EMPTY.getCode(), ReturnCodeEnum.ACCOUNT_NO_EMPTY.getMessage());
             } else if (StrUtil.isBlank(loginInputDTO.getPassword())) {
-                return ResultData.fail(ReturnCodeEnum.PASSWORD_EMPTY_ERR.getCode(),
-                        ReturnCodeEnum.PASSWORD_EMPTY_ERR.getMessage());
+                return ResultData.fail(ReturnCodeEnum.PASSWORD_EMPTY.getCode(), ReturnCodeEnum.PASSWORD_EMPTY.getMessage());
             }
             loginStrategy = loginStrategyFactory.getLoginStrategy(Constant.LOGIN_TYPE_ACCOUNT);
         } else if (Constant.LOGIN_TYPE_PHONE.equals(loginType)) {
             if (StrUtil.isBlank(loginInputDTO.getPhoneNo())) {
-                return ResultData.fail(ReturnCodeEnum.PHONE_NO_EMPTY_ERR.getCode(),
-                        ReturnCodeEnum.PHONE_NO_EMPTY_ERR.getMessage());
+                return ResultData.fail(ReturnCodeEnum.PHONE_NO_EMPTY.getCode(), ReturnCodeEnum.PHONE_NO_EMPTY.getMessage());
             } else if (StrUtil.isBlank(loginInputDTO.getVerifyCode())) {
-                return ResultData.fail(ReturnCodeEnum.VERIFY_CODE_EMPTY_ERR.getCode(),
-                        ReturnCodeEnum.VERIFY_CODE_EMPTY_ERR.getMessage());
+                return ResultData.fail(ReturnCodeEnum.VERIFY_CODE_EMPTY.getCode(), ReturnCodeEnum.VERIFY_CODE_EMPTY.getMessage());
             }
             loginStrategy = loginStrategyFactory.getLoginStrategy(Constant.LOGIN_TYPE_PHONE);
         } else {

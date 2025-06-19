@@ -36,7 +36,32 @@ class BackendApplicationTests {
 
 	@Test
 	void randomUserInfo() {
-
+		List<UserInfo> userInfoList = new ArrayList<>();
+		for (int i = 1; i <= 15000; i++) {
+			Map<String, String> userInfoMap = getUserInfo(RandomUtil.randomInt(0, 2));
+			UserInfo userInfo = Convert.convert(UserInfo.class, userInfoMap);
+			if (userInfo.getAddress() == null) {
+				continue;
+			}
+			String password = stringEncryptor.encrypt(userInfo.getPassword());
+			userInfo.setPassword(password);
+			if ("男".equals(userInfo.getGender())) {
+				userInfo.setAvatar("https://llm-1258823864.cos.ap-shanghai.myqcloud.com/boy.png");
+			} else {
+				userInfo.setAvatar("https://llm-1258823864.cos.ap-shanghai.myqcloud.com/girl.png");
+			}
+			userInfoList.add(userInfo);
+			if (i % 10 == 0) {
+				System.out.println("=============================== 第" + i / 10 + "轮插入数据开始 ===============================");
+				try {
+					userInfoDao.insert(userInfoList, 10);
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
+				System.out.println("=============================== 第" + i / 10 + "轮插入数据结束 ===============================");
+				userInfoList.clear();
+			}
+		}
 	}
 
 	private Map<String, String> getUserInfo(int random) {

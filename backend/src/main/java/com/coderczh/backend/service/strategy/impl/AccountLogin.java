@@ -16,6 +16,7 @@ import io.github.yindz.random.source.PersonInfoSource;
 import jakarta.annotation.Resource;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -29,13 +30,13 @@ public class AccountLogin implements LoginStrategy {
     private StringEncryptor stringEncryptor;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResultData<LoginOutputDTO> login(String register, LoginInputDTO loginInputDTO) {
         // 注册
         if (Constant.REGISTER_FLAG_TRUE.equals(register)) {
             UserInfo userInfo = getUserInfo(loginInputDTO);
             if (userInfoDao.insert(userInfo) == 1) {
-                LoginOutputDTO loginOutputDTO = new LoginOutputDTO();
-                loginOutputDTO.setAccountNo(loginInputDTO.getAccountNo());
+                LoginOutputDTO loginOutputDTO = Convert.convert(LoginOutputDTO.class, userInfo);
                 return ResultData.success(loginOutputDTO);
             } else {
                 return ResultData.fail(ReturnCodeEnum.USER_REGISTER_ERR.getCode(),
@@ -47,13 +48,13 @@ public class AccountLogin implements LoginStrategy {
             wrapper.eq("account_no", loginInputDTO.getAccountNo());
             UserInfo userInfo = userInfoDao.selectOne(wrapper);
             if (userInfo == null) {
-                return ResultData.fail(ReturnCodeEnum.ACCOUNT_INFO_ERR.getCode(), ReturnCodeEnum.ACCOUNT_INFO_ERR.getMessage());
+                return ResultData.fail(ReturnCodeEnum.USER_INFO_EMPTY.getCode(), ReturnCodeEnum.USER_INFO_EMPTY.getMessage());
             } else {
                 String password = userInfo.getPassword();
                 String decrypt = stringEncryptor.decrypt(password);
                 return StrUtil.equals(decrypt, loginInputDTO.getPassword()) ?
                         ResultData.success(Convert.convert(LoginOutputDTO.class, userInfo))
-                        : ResultData.fail(ReturnCodeEnum.ACCOUNT_INFO_ERR.getCode(), ReturnCodeEnum.ACCOUNT_INFO_ERR.getMessage());
+                        : ResultData.fail(ReturnCodeEnum.PASSWORD_ERR.getCode(), ReturnCodeEnum.PASSWORD_ERR.getMessage());
             }
         }
     }
