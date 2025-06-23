@@ -19,12 +19,7 @@
               <img src="@/assets/img/phone.png" style="width: 20px; height: 20px" />
             </div>
           </div>
-          <el-checkbox
-            v-model="register"
-            label="是否注册为新用户"
-            size="small"
-            class="login-remind"
-          />
+          <el-checkbox v-model="register" label="注册为新用户" size="small" class="login-remind" />
           <el-button class="login-button" size="large" @click="submitClick" v-if="!loading">
             <span v-if="register">注&nbsp;册</span>
             <span v-else>登&nbsp;录</span>
@@ -85,15 +80,15 @@ const submitClick = async () => {
   if (loginByAccount.value) {
     const accountNo = accountRef.value.accountInfo.accountNo.trim()
     const password = accountRef.value.accountInfo.password.trim()
-    if (accountNo === '' || accountNo.length > 20) {
+    if (accountNo === '' || accountNo.length < 5 || accountNo.length > 20) {
       ElMessage({
         type: 'warning',
-        message: '账号错误',
+        message: '账号不能为空，且长度应为5~20位',
       })
-    } else if (password === '' || password.length > 20) {
+    } else if (password === '' || password.length < 5 || password.length > 20) {
       ElMessage({
         type: 'warning',
-        message: '密码错误',
+        message: '密码不能为空，且长度应为5~20位',
       })
     } else {
       const loginByAccount = '0'

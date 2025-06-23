@@ -139,7 +139,7 @@ class BackendApplicationTests {
 
 	@Test
 	public void getPassword() {
-		String decrypt = stringEncryptor.decrypt("4XjWmNVwMgMAp35SkFrnJDcEX6w2ciVmiTlH1hHexmaljNqMXWmmtxrjr/v377IO");
+		String decrypt = stringEncryptor.decrypt("FsFHUv/kOsk7EUoZkwpAAzKFQjjXo+6CaJUZFtMJHXLmtWye86eDZ3f1H31mbyiW");
 		System.out.println(decrypt);
 	}
 }

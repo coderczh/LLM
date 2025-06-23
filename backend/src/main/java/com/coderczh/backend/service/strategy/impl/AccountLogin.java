@@ -34,6 +34,14 @@ public class AccountLogin implements LoginStrategy {
     public ResultData<LoginOutputDTO> login(String register, LoginInputDTO loginInputDTO) {
         // 注册
         if (Constant.REGISTER_FLAG_TRUE.equals(register)) {
+            QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("account_no", loginInputDTO.getAccountNo());
+            // 已经注册过
+            if (userInfoDao.selectOne(queryWrapper) != null) {
+                return ResultData.fail(ReturnCodeEnum.USER_INFO_EXIST_ERR.getCode(),
+                        ReturnCodeEnum.USER_INFO_EXIST_ERR.getMessage());
+            }
+            // 注册
             UserInfo userInfo = getUserInfo(loginInputDTO);
             if (userInfoDao.insert(userInfo) == 1) {
                 LoginOutputDTO loginOutputDTO = Convert.convert(LoginOutputDTO.class, userInfo);
@@ -64,8 +72,10 @@ public class AccountLogin implements LoginStrategy {
         String password = stringEncryptor.encrypt(loginInputDTO.getPassword());
         PersonInfoSource personInfoSource = RandomSource.personInfoSource();
         Date date = new Date();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String nickName = personInfoSource.randomNickName(5) + timestamp.substring(timestamp.length() - 5);
         return userInfo.setPassword(password)
-                .setNickName(personInfoSource.randomQQNickName())
+                .setNickName(nickName)
                 .setCreateDate(date)
                 .setCreateTime(date);
     }
