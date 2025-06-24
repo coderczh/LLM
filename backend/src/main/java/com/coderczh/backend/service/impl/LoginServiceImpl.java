@@ -53,7 +53,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public ResultData<String> getVerifyCode(String phoneNo) {
-        if (StrUtil.isNotBlank(redisUtil.getStr(phoneNo))) {
+        if (StrUtil.isNotBlank((String) redisUtil.getStr(phoneNo))) {
             return ResultData.fail(ReturnCodeEnum.REQUEST_FREQUENT_ERR.getCode(),
                     ReturnCodeEnum.REQUEST_FREQUENT_ERR.getMessage());
         } else {

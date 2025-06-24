@@ -3,6 +3,8 @@ package com.coderczh.backend;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.coderczh.backend.dao.UserInfoDao;
 import com.coderczh.backend.entity.UserInfo;
 import io.github.yindz.random.RandomSource;
@@ -36,13 +38,29 @@ class BackendApplicationTests {
 
 	@Test
 	void randomUserInfo() {
-		List<UserInfo> userInfoList = new ArrayList<>();
-		for (int i = 1; i <= 15000; i++) {
-			Map<String, String> userInfoMap = getUserInfo(RandomUtil.randomInt(0, 2));
-			UserInfo userInfo = Convert.convert(UserInfo.class, userInfoMap);
-			if (userInfo.getAddress() == null) {
-				continue;
+		QueryWrapper<UserInfo> wrapper = new QueryWrapper<>();
+		wrapper.select("nick_name", "id_card", "email", "phone_no", "account_no");
+		List<UserInfo> userInfoList = userInfoDao.selectList(wrapper);
+		List<UserInfo> insertList = new ArrayList<>();
+		for (int i = 1; i <= 2000; i++) {
+			Map<String, String> userInfoMap;
+			while (true) {
+				userInfoMap = getUserInfo(RandomUtil.randomInt(0, 2));
+				UserInfo userInfo = Convert.convert(UserInfo.class, userInfoMap);
+				String nickName = userInfo.getNickName().length() > 20
+						? userInfo.getNickName().substring(0, 20) : userInfo.getNickName();
+				long filterCount = userInfoList.stream()
+						.filter(item -> StrUtil.equals(item.getNickName(), nickName)
+								|| StrUtil.equals(item.getIdCard(), userInfo.getIdCard())
+								|| StrUtil.equals(item.getEmail(), userInfo.getEmail())
+								|| StrUtil.equals(item.getPhoneNo(), userInfo.getPhoneNo())
+								|| StrUtil.equals(item.getAccountNo(), userInfo.getAccountNo()))
+						.count();
+				if (filterCount == 0L && userInfo.getAddress() != null) {
+					break;
+				}
 			}
+			UserInfo userInfo = Convert.convert(UserInfo.class, userInfoMap);
 			String password = stringEncryptor.encrypt(userInfo.getPassword());
 			userInfo.setPassword(password);
 			if ("男".equals(userInfo.getGender())) {
@@ -50,28 +68,33 @@ class BackendApplicationTests {
 			} else {
 				userInfo.setAvatar("https://llm-1258823864.cos.ap-shanghai.myqcloud.com/girl.png");
 			}
+			String nickName = userInfo.getNickName().length() > 20
+					? userInfo.getNickName().substring(0, 20) : userInfo.getNickName();
+			userInfo.setNickName(nickName);
+			insertList.add(userInfo);
 			userInfoList.add(userInfo);
-			if (i % 10 == 0) {
-				System.out.println("=============================== 第" + i / 10 + "轮插入数据开始 ===============================");
+			System.out.println("=============================== 总数: " + insertList.size() + "===============================");
+			if (i % 100 == 0) {
+				System.out.println("=============================== 第" + i / 100 + "轮插入数据开始 ===============================");
 				try {
-					userInfoDao.insert(userInfoList, 10);
+					userInfoDao.insert(insertList, 10);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
-				System.out.println("=============================== 第" + i / 10 + "轮插入数据结束 ===============================");
-				userInfoList.clear();
+				System.out.println("=============================== 第" + i / 100 + "轮插入数据结束 ===============================");
+				insertList.clear();
 			}
 		}
 	}
 
 	private Map<String, String> getUserInfo(int random) {
 		PersonInfoSource personInfoSource = RandomSource.personInfoSource();
-		Map<String, String> userInfoMap = new HashMap<>();
+		Map<String, String> userInfoMap = new HashMap<>(32);
 		// 真实姓名
 		String realName = random == 0 ? personInfoSource.randomMaleChineseName() : personInfoSource.randomFemaleChineseName();
 		userInfoMap.put("realName", realName);
 		// 昵称
-		userInfoMap.put("nickName", personInfoSource.randomQQNickName());
+		userInfoMap.put("nickName", personInfoSource.randomChineseNickName(10));
 		// 年龄
 		int age = RandomUtil.randomInt(10, 70);
 		userInfoMap.put("age", String.valueOf(age));

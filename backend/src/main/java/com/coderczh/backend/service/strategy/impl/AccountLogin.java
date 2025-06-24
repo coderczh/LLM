@@ -4,6 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.coderczh.backend.common.Constant;
+import com.coderczh.backend.common.util.RedisUtil;
 import com.coderczh.backend.dao.UserInfoDao;
 import com.coderczh.backend.dto.LoginInputDTO;
 import com.coderczh.backend.dto.LoginOutputDTO;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Component(Constant.LOGIN_TYPE_ACCOUNT)
 public class AccountLogin implements LoginStrategy {
@@ -29,22 +31,30 @@ public class AccountLogin implements LoginStrategy {
     @Resource
     private StringEncryptor stringEncryptor;
 
+    @Resource
+    private RedisUtil redisUtil;
+
+    private static final String REDIS_KEY = "userInfo";
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultData<LoginOutputDTO> login(String register, LoginInputDTO loginInputDTO) {
         // 注册
         if (Constant.REGISTER_FLAG_TRUE.equals(register)) {
-            QueryWrapper<UserInfo> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("account_no", loginInputDTO.getAccountNo());
-            // 已经注册过
-            if (userInfoDao.selectOne(queryWrapper) != null) {
-                return ResultData.fail(ReturnCodeEnum.USER_INFO_EXIST_ERR.getCode(),
-                        ReturnCodeEnum.USER_INFO_EXIST_ERR.getMessage());
+            List<Object> resList = redisUtil.getAllList(REDIS_KEY);
+            for (Object res : resList) {
+                UserInfo userInfo = Convert.convert(UserInfo.class, res);
+                // 已经注册过
+                if (StrUtil.equals(userInfo.getAccountNo(), loginInputDTO.getAccountNo())) {
+                    return ResultData.fail(ReturnCodeEnum.USER_INFO_EXIST_ERR.getCode(),
+                            ReturnCodeEnum.USER_INFO_EXIST_ERR.getMessage());
+                }
             }
             // 注册
             UserInfo userInfo = getUserInfo(loginInputDTO);
             if (userInfoDao.insert(userInfo) == 1) {
                 LoginOutputDTO loginOutputDTO = Convert.convert(LoginOutputDTO.class, userInfo);
+                redisUtil.addList(REDIS_KEY, userInfo);
                 return ResultData.success(loginOutputDTO);
             } else {
                 return ResultData.fail(ReturnCodeEnum.USER_REGISTER_ERR.getCode(),
@@ -74,9 +84,12 @@ public class AccountLogin implements LoginStrategy {
         Date date = new Date();
         String timestamp = String.valueOf(System.currentTimeMillis());
         String nickName = personInfoSource.randomNickName(5) + timestamp.substring(timestamp.length() - 5);
-        return userInfo.setPassword(password)
+        return userInfo.setAvatar(Constant.DEFAULT_AVATAR_URL)
+                .setGender(Constant.DEFAULT_GENDER)
+                .setPassword(password)
                 .setNickName(nickName)
                 .setCreateDate(date)
                 .setCreateTime(date);
     }
+
 }

@@ -98,7 +98,7 @@ const submitClick = async () => {
     if (phoneRef.value.phoneInfo.verifyCode.trim().length !== 6) {
       ElMessage({
         type: 'warning',
-        message: '验证码错误',
+        message: '验证码不能为空且长度应为6位',
       })
     } else {
       const loginByPhone = '1'

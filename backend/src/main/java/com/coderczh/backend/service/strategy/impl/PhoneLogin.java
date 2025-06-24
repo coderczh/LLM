@@ -15,10 +15,12 @@ import com.coderczh.backend.service.strategy.LoginStrategy;
 import io.github.yindz.random.RandomSource;
 import io.github.yindz.random.source.PersonInfoSource;
 import jakarta.annotation.Resource;
+import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Component(Constant.LOGIN_TYPE_PHONE)
 public class PhoneLogin implements LoginStrategy {
@@ -29,14 +31,30 @@ public class PhoneLogin implements LoginStrategy {
     @Resource
     private RedisUtil redisUtil;
 
+    @Resource
+    private StringEncryptor stringEncryptor;
+
+    private static final String REDIS_KEY = "userInfo";
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultData<LoginOutputDTO> login(String register, LoginInputDTO loginInputDTO) {
         // 注册
         if (Constant.REGISTER_FLAG_TRUE.equals(register)) {
+            List<Object> resList = redisUtil.getAllList(REDIS_KEY);
+            for (Object res : resList) {
+                UserInfo userInfo = Convert.convert(UserInfo.class, res);
+                // 已经注册过
+                if (StrUtil.equals(userInfo.getPhoneNo(), loginInputDTO.getPhoneNo())) {
+                    return ResultData.fail(ReturnCodeEnum.USER_INFO_EXIST_ERR.getCode(),
+                            ReturnCodeEnum.USER_INFO_EXIST_ERR.getMessage());
+                }
+            }
             UserInfo userInfo = getUserInfo(loginInputDTO);
             if (userInfoDao.insert(userInfo) == 1) {
                 LoginOutputDTO loginOutputDTO = Convert.convert(LoginOutputDTO.class, userInfo);
+                loginOutputDTO.setAvatar(Constant.DEFAULT_AVATAR_URL);
                 return ResultData.success(loginOutputDTO);
             } else {
                 return ResultData.fail(ReturnCodeEnum.USER_REGISTER_ERR.getCode(),
@@ -49,7 +67,7 @@ public class PhoneLogin implements LoginStrategy {
             if (userInfo == null) {
                 return ResultData.fail(ReturnCodeEnum.USER_INFO_EMPTY.getCode(), ReturnCodeEnum.USER_INFO_EMPTY.getMessage());
             } else {
-                String verifyCode = redisUtil.getStr(loginInputDTO.getPhoneNo());
+                String verifyCode = (String) redisUtil.getStr(loginInputDTO.getPhoneNo());
                 return StrUtil.equals(verifyCode, loginInputDTO.getVerifyCode()) ?
                         ResultData.success(Convert.convert(LoginOutputDTO.class, userInfo))
                         : ResultData.fail(ReturnCodeEnum.VERIFY_CODE_ERR.getCode(), ReturnCodeEnum.VERIFY_CODE_ERR.getMessage());
@@ -59,9 +77,14 @@ public class PhoneLogin implements LoginStrategy {
 
     private UserInfo getUserInfo(LoginInputDTO loginInputDTO) {
         UserInfo userInfo = Convert.convert(UserInfo.class, loginInputDTO);
+        String password = stringEncryptor.encrypt(Constant.DEFAULT_PASSWORD);
         PersonInfoSource personInfoSource = RandomSource.personInfoSource();
         Date date = new Date();
-        return userInfo.setNickName(personInfoSource.randomQQNickName())
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        String nickName = personInfoSource.randomNickName(5) + timestamp.substring(timestamp.length() - 5);
+        return userInfo.setAccountNo(personInfoSource.randomNickName(10))
+                .setPassword(password)
+                .setNickName(nickName)
                 .setCreateDate(date)
                 .setCreateTime(date);
     }
