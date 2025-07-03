@@ -45,7 +45,7 @@ const getVerifyCodeClick = async () => {
   }
   if (!verifyPhoneNo(phoneInfo.phoneNo)) {
     ElMessage({
-      type: 'error',
+      type: 'warning',
       message: '手机号格式错误',
       plain: true,
     })

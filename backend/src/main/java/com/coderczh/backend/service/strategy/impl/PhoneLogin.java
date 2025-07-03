@@ -34,15 +34,18 @@ public class PhoneLogin implements LoginStrategy {
     @Resource
     private StringEncryptor stringEncryptor;
 
-    private static final String REDIS_KEY = "userInfo";
-
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultData<LoginOutputDTO> login(String register, LoginInputDTO loginInputDTO) {
+        // 校验验证码
+        String verifyCode = (String) redisUtil.getStr(loginInputDTO.getPhoneNo());
+        if (!StrUtil.equals(verifyCode, loginInputDTO.getVerifyCode())) {
+            return ResultData.fail(ReturnCodeEnum.VERIFY_CODE_ERR.getCode(), ReturnCodeEnum.VERIFY_CODE_ERR.getMessage());
+        }
         // 注册
         if (Constant.REGISTER_FLAG_TRUE.equals(register)) {
-            List<Object> resList = redisUtil.getAllList(REDIS_KEY);
+            List<Object> resList = redisUtil.getAllList(Constant.REDIS_KEY_PHONE_NO);
             for (Object res : resList) {
                 UserInfo userInfo = Convert.convert(UserInfo.class, res);
                 // 已经注册过
@@ -53,8 +56,8 @@ public class PhoneLogin implements LoginStrategy {
             }
             UserInfo userInfo = getUserInfo(loginInputDTO);
             if (userInfoDao.insert(userInfo) == 1) {
+                redisUtil.addList(Constant.REDIS_KEY_PHONE_NO, userInfo);
                 LoginOutputDTO loginOutputDTO = Convert.convert(LoginOutputDTO.class, userInfo);
-                loginOutputDTO.setAvatar(Constant.DEFAULT_AVATAR_URL);
                 return ResultData.success(loginOutputDTO);
             } else {
                 return ResultData.fail(ReturnCodeEnum.USER_REGISTER_ERR.getCode(),
@@ -66,24 +69,20 @@ public class PhoneLogin implements LoginStrategy {
             UserInfo userInfo = userInfoDao.selectOne(wrapper);
             if (userInfo == null) {
                 return ResultData.fail(ReturnCodeEnum.USER_INFO_EMPTY.getCode(), ReturnCodeEnum.USER_INFO_EMPTY.getMessage());
-            } else {
-                String verifyCode = (String) redisUtil.getStr(loginInputDTO.getPhoneNo());
-                return StrUtil.equals(verifyCode, loginInputDTO.getVerifyCode()) ?
-                        ResultData.success(Convert.convert(LoginOutputDTO.class, userInfo))
-                        : ResultData.fail(ReturnCodeEnum.VERIFY_CODE_ERR.getCode(), ReturnCodeEnum.VERIFY_CODE_ERR.getMessage());
             }
+            LoginOutputDTO loginOutputDTO = Convert.convert(LoginOutputDTO.class, userInfo);
+            return ResultData.success(loginOutputDTO);
         }
     }
 
     private UserInfo getUserInfo(LoginInputDTO loginInputDTO) {
         UserInfo userInfo = Convert.convert(UserInfo.class, loginInputDTO);
-        String password = stringEncryptor.encrypt(Constant.DEFAULT_PASSWORD);
         PersonInfoSource personInfoSource = RandomSource.personInfoSource();
-        Date date = new Date();
         String timestamp = String.valueOf(System.currentTimeMillis());
         String nickName = personInfoSource.randomNickName(5) + timestamp.substring(timestamp.length() - 5);
-        return userInfo.setAccountNo(personInfoSource.randomNickName(10))
-                .setPassword(password)
+        Date date = new Date();
+        return userInfo.setAvatar(Constant.DEFAULT_AVATAR_URL)
+                .setGender(Constant.DEFAULT_GENDER)
                 .setNickName(nickName)
                 .setCreateDate(date)
                 .setCreateTime(date);

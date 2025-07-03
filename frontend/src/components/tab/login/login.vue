@@ -84,11 +84,13 @@ const submitClick = async () => {
       ElMessage({
         type: 'warning',
         message: '账号不能为空，且长度应为5~20位',
+        plain: true,
       })
     } else if (password === '' || password.length < 5 || password.length > 20) {
       ElMessage({
         type: 'warning',
         message: '密码不能为空，且长度应为5~20位',
+        plain: true,
       })
     } else {
       const loginByAccount = '0'
@@ -99,6 +101,7 @@ const submitClick = async () => {
       ElMessage({
         type: 'warning',
         message: '验证码不能为空且长度应为6位',
+        plain: true,
       })
     } else {
       const loginByPhone = '1'
@@ -109,6 +112,7 @@ const submitClick = async () => {
     ElMessage({
       type: 'success',
       message: '登录成功',
+      plain: true,
     })
     closeDialog()
     logged(true)

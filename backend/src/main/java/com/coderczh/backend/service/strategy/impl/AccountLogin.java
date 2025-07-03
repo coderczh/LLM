@@ -41,7 +41,7 @@ public class AccountLogin implements LoginStrategy {
     public ResultData<LoginOutputDTO> login(String register, LoginInputDTO loginInputDTO) {
         // 注册
         if (Constant.REGISTER_FLAG_TRUE.equals(register)) {
-            List<Object> resList = redisUtil.getAllList(REDIS_KEY);
+            List<Object> resList = redisUtil.getAllList(Constant.REDIS_KEY_ACCOUNT_NO);
             for (Object res : resList) {
                 UserInfo userInfo = Convert.convert(UserInfo.class, res);
                 // 已经注册过
@@ -53,8 +53,8 @@ public class AccountLogin implements LoginStrategy {
             // 注册
             UserInfo userInfo = getUserInfo(loginInputDTO);
             if (userInfoDao.insert(userInfo) == 1) {
+                redisUtil.addList(Constant.REDIS_KEY_ACCOUNT_NO, userInfo);
                 LoginOutputDTO loginOutputDTO = Convert.convert(LoginOutputDTO.class, userInfo);
-                redisUtil.addList(REDIS_KEY, userInfo);
                 return ResultData.success(loginOutputDTO);
             } else {
                 return ResultData.fail(ReturnCodeEnum.USER_REGISTER_ERR.getCode(),

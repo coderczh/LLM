@@ -11,5 +11,6 @@ public class Constant {
     public static final String DEFAULT_AVATAR_URL = "https://llm-1258823864.cos.ap-shanghai.myqcloud.com/boy.png";
     public static final String DEFAULT_PASSWORD = "12345";
     public static final String DEFAULT_GENDER = "0";
-    public static final String REDIS_KEY_USER_INFO = "USER_INFO";
+    public static final String REDIS_KEY_ACCOUNT_NO = "ACCOUNT_NO";
+    public static final String REDIS_KEY_PHONE_NO = "PHONE_NO";
 }
