@@ -12,11 +12,12 @@
         <el-button color="rgba(0, 0, 0, 0.05)" size="large" circle>登录</el-button>
       </div>
       <div v-else>
-        <el-avatar :src="localCache.getCache('userInfo').avatar" />
+        <el-avatar :src="localCache.getCache('userInfo').avatar" @click="updateUserInfo" />
       </div>
     </div>
   </div>
   <login @closeDialog="closeDialog" @logged="logged" v-if="showDialog" />
+  <userinfo :showUpdateUserInfo="showUpdateUserInfo" />
 </template>
 
 <script lang="ts" setup>
@@ -24,6 +25,7 @@ import { onMounted, ref } from 'vue'
 import feature from './feature/feature.vue'
 import login from './login/login.vue'
 import { localCache } from '@/assets/common/cache'
+import userinfo from './userinfo/userinfo.vue'
 
 const showLogin = ref<boolean>(true)
 onMounted(() => {
@@ -40,6 +42,12 @@ const openDialog = () => {
 
 const logged = (e: any) => {
   showLogin.value = !e
+}
+
+const showUpdateUserInfo = ref<boolean>(false)
+const updateUserInfo = () => {
+  showUpdateUserInfo.value = true
+  console.log(showUpdateUserInfo.value)
 }
 </script>
 

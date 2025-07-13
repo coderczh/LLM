@@ -39,5 +39,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     Spot: typeof import('./src/components/content/spot/spot.vue')['default']
     Tab: typeof import('./src/components/tab/tab.vue')['default']
+    Userinfo: typeof import('./src/components/tab/userinfo/userinfo.vue')['default']
   }
 }
