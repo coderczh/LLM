@@ -12,12 +12,22 @@
         <el-button color="rgba(0, 0, 0, 0.05)" size="large" circle>登录</el-button>
       </div>
       <div v-else>
-        <el-avatar :src="localCache.getCache('userInfo').avatar" @click="updateUserInfo" />
+        <el-popover placement="right-end" popper-style="min-width: 110px" width="110">
+          <div @click="updateUserInfo()">
+            <el-button text style="color: #666">修改信息</el-button>
+          </div>
+          <div @click="realAuth()">
+            <el-button text style="color: #666">实名认证</el-button>
+          </div>
+          <template #reference>
+            <el-avatar :src="localCache.getCache('userInfo').avatar" />
+          </template>
+        </el-popover>
       </div>
     </div>
   </div>
   <login @closeDialog="closeDialog" @logged="logged" v-if="showDialog" />
-  <userinfo :showUpdateUserInfo="showUpdateUserInfo" />
+  <userinfo @closeDialog="closeUpdateUserInfo" v-if="showUpdateUserInfo" />
 </template>
 
 <script lang="ts" setup>
@@ -47,7 +57,14 @@ const logged = (e: any) => {
 const showUpdateUserInfo = ref<boolean>(false)
 const updateUserInfo = () => {
   showUpdateUserInfo.value = true
-  console.log(showUpdateUserInfo.value)
+}
+const closeUpdateUserInfo = (value: boolean) => {
+  showUpdateUserInfo.value = value
+}
+
+const showRealAuth = ref<boolean>(false)
+const realAuth = () => {
+  showRealAuth.value = true
 }
 </script>
 
