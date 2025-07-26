@@ -42,7 +42,8 @@ public enum ReturnCodeEnum {
     PASSWORD_EMPTY("1006", "密码不能为空"),
     PHONE_NO_EMPTY("1007", "手机号码不能为空"),
     VERIFY_CODE_EMPTY("1008", "验证码不能为空"),
-    LOGIN_TYPE_ERR("1009", "登录类型错误");
+    LOGIN_TYPE_ERR("1009", "登录类型错误"),
+    USER_INFO_UPDATE_ERR("1010", "用户信息更新失败");
 
     /**
      * 返回码

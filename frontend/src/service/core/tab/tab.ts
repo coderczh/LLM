@@ -10,10 +10,18 @@ const getUserInfoReq = (userInfo: any, register: boolean, loginType: string) => 
 
 const getVerifyCodeReq = (phoneNo: string) => {
   return hyRequest.instance({
-    url: 'login/verify-code',
+    url: '/login/verify-code',
     method: 'POST',
     data: phoneNo,
   })
 }
 
-export { getUserInfoReq, getVerifyCodeReq }
+const updateUserInfoReq = (userInfo: any) => {
+  return hyRequest.instance({
+    url: '/user-info',
+    method: 'PATCH',
+    data: userInfo,
+  })
+}
+
+export { getUserInfoReq, getVerifyCodeReq, updateUserInfoReq }
